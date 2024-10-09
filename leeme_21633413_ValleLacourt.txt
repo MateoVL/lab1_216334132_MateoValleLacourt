@@ -1,0 +1,7 @@
+Para cualquier instrucción especial para ejecución u otro, según aplique.
+
+Comentario de funciones:
+; Descripción: insertar descripción de la función.
+; Dom: valor1 (tipo dato) X arg2 (tipo dato) …
+; Rec: valor1 (tipo dato) X …
+; Tipo recursión: No aplica/Natural/Cola
