@@ -5,3 +5,7 @@ Comentario de funciones:
 ; Dom: valor1 (tipo dato) X arg2 (tipo dato) …
 ; Rec: valor1 (tipo dato) X …
 ; Tipo recursión: No aplica/Natural/Cola
+
+info sacada de: 
+	https://docs.racket-lang.org/reference/index.html
+	https://www.youtube.com/playlist?list=PLTd5ehIj0goMswKV4Glhr4uixrhCmihIt
