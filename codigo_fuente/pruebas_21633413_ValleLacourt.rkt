@@ -44,9 +44,9 @@
 (define matriz2 '(("red" "yellow" "red" "red" "yellow" "yellow" "red")
                   ("red" "red" "yellow" "red" "yellow" "red" "yellow")
                   ("red" "yellow" "red" "yellow" "red" "red" "yellow")
-                  ("yellow" "red" "red" "yellow" "red" "yellow" "yellow")
+                  ("yellow" "red" "red" "red" "yellow" "yellow" "yellow")
                   ("red" "yellow" "yellow" "yellow" "red" "yellow" "red")
-                  ("red" "yellow" "red" "yellow" "red" "yellow" "yellow")))
+                  ("red" "yellow" "red" "red" "red" "red" "yellow")))
 ;(board-can-play? matriz1)
 ;(board-can-play? empty-board)
 ;(board-can-play? matriz2)
@@ -82,14 +82,19 @@
 (define b2 (board-set-play-piece b1 4 yellow-piece))
 (define b3 (board-set-play-piece b2 4 red-piece))
 (define b4 (board-set-play-piece b3 5 yellow-piece))
-b1
-b2
-b3
-b4
+;b1
+;b2
+;b3
+;b4
 
 
 
+;board-check-vertical-win
+;(board-check-vertical-win updated-board)
 
 
+
+;board-check-horizontal-win
+(board-check-horizontal-win matriz2)
 
 

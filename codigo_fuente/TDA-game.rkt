@@ -1,6 +1,7 @@
 #lang racket
 (provide game)
-
+(provide game-get-p1)
+(provide game-get-p2)
 
 ;;;TDA-game: Estuctura que representa un juego, con todas sus caracteristicas, como los jugadores, el tablero, y el turno actual. Representada como una lista.
 
@@ -22,6 +23,13 @@
 
 
 ;;SELECTORES
+
+(define game-get-p1
+  (lambda game (list-ref game 0)))
+
+(define game-get-p2
+  (lambda game (list-ref game 1)))
+
 
 
 ; Descripción: funcion que obtiene el jugador del turno actual.
