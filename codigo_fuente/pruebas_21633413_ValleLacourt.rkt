@@ -10,7 +10,7 @@
 ;player
 (define p1 (player 1 "Juan" "red" 0 0 0 21))
 (define p2 (player 2 "Juan" "yellow" 0 0 0 21))
-(define p3 (player 1 "Mateo" "red" 10 5 2 21))
+;(define p3 (player 1 "Mateo" "red" 10 5 2 21))
 ;p1
 ;p2
 ;p3
@@ -41,60 +41,58 @@
                   ("red" "yellow" "yellow" 0 0 0 "red")
                   ("red" "yellow" "red" 0 0 0 "yellow")))
 
-(define matriz2 '(("red" "yellow" "red" "red" "yellow" "yellow" "red")
-                  ("red" "red" "yellow" "red" "yellow" "red" "yellow")
-                  ("red" "yellow" "red" "yellow" "red" "red" "yellow")
-                  ("yellow" "red" "red" "red" "yellow" "yellow" "yellow")
-                  ("red" "yellow" "yellow" "yellow" "red" "yellow" "red")
-                  ("red" "yellow" "red" "red" "red" "red" "yellow")))
+(define matriz2 '(("red"    "yellow" "yellow" "red"    "yellow" "yellow" "red")
+                  ("red"    "red"    "red"    "red"    "yellow" "red"    "red")
+                  ("yellow" "yellow" "red"    "yellow" "red"    "red"    "yellow")
+                  ("yellow" "red"    "yellow" "red"    "red"    "yellow" "yellow")
+                  ("red"    "yellow" "red"    "yellow" "yellow" "yellow" "red")
+                  ("yellow" "yellow" "yellow" "red"    "red"    "red"    "yellow")))
+(define matriz3 '((0 "red"  0 0 0 0 0)
+                 (0 0 "red" 0 0 0 0)
+                 (0 0 0 "red" 0 0 0)
+                 (0 0 0 0 "red" 0 0)
+                 (0 0 0 0 0 0 0)
+                 (0 0 0 0 0 0 0)))
 ;(board-can-play? matriz1)
 ;(board-can-play? empty-board)
 ;(board-can-play? matriz2)
 
 
 
-;game
-(define new-game (game p1 p2 empty-board 1))
-(define updated-game (game p1 p3 matriz1 2))
-(define ug2 (game p2 p3 matriz2 1))
-;new-game
-;updated-game
-;ug2
-
-
-
-;board-get-filas
-;board-get-columnas
-;board-get-filas
-;board-get-columnas
-
-
-
-;board-get-fila-baja
-;(board-get-fila-baja matriz1 7)
-;(board-get-fila-baja matriz1 1)
-;(board-get-fila-baja matriz1 4)
-
-
-
 ;board-set-play-piece
-(define b1 (board-set-play-piece b0 3 red-piece))
-(define b2 (board-set-play-piece b1 4 yellow-piece))
-(define b3 (board-set-play-piece b2 4 red-piece))
-(define b4 (board-set-play-piece b3 5 yellow-piece))
-;b1
-;b2
-;b3
-;b4
+#|(define b1 (board-set-play-piece b0 6 red-piece))
+(define b2 (board-set-play-piece b1 6 yellow-piece))
+(define b3 (board-set-play-piece b2 6 red-piece))
+(define b4 (board-set-play-piece b3 6 yellow-piece))
+(define b5 (board-set-play-piece b4 6 yellow-piece))
+(define b6 (board-set-play-piece b5 6 yellow-piece))
+(define b7 (board-set-play-piece b6 6 yellow-piece))
+b1
+b2
+b3
+b4
+b5
+b6
+b7|#
 
 
 
 ;board-check-vertical-win
-;(board-check-vertical-win updated-board)
-
+;(board-check-vertical-win matriz2)
 
 
 ;board-check-horizontal-win
-(board-check-horizontal-win matriz2)
+;(board-check-horizontal-win matriz2)
 
 
+;board-check-diagonal-win
+;(board-check-diagonal-win matriz3)
+
+
+;game
+;(define new-game (game p1 p2 empty-board 1))
+;(define updated-game (game p1 p3 matriz1 2))
+;(define ug2 (game p2 p3 matriz2 1))
+;new-game
+;updated-game
+;ug2
