@@ -10,7 +10,7 @@
 ;player
 (define p1 (player 1 "Juan" "red" 0 0 0 21))
 (define p2 (player 2 "Juan" "yellow" 0 0 0 21))
-;(define p3 (player 1 "Mateo" "red" 10 5 2 21))
+(define p3 (player 1 "Mateo" "red" 10 5 2 21))
 ;p1
 ;p2
 ;p3
@@ -34,25 +34,31 @@
 
 
 ;board-can-play?
-(define matriz1 '(("red" "yellow" "red" 0 0 0 0)
-                  ("red" "red" "yellow" 0 0 0 0)
-                  ("red" "yellow" "red" 0 0 0 0)
-                  ("yellow" "red" "red" 0 0 0 0)
-                  ("red" "yellow" "yellow" 0 0 0 "red")
-                  ("red" "yellow" "red" 0 0 0 "yellow")))
+(define matriz1 '(("red"    "yellow" "red"    0 0 0 0)
+                  ("red"    "red"    "yellow" 0 0 0 0)
+                  ("red"    "yellow" "red"    0 0 0 0)
+                  ("yellow" "yellow" "red"    0 0 0 0)
+                  ("red"    "yellow" "yellow" 0 0 0 "red")
+                  ("red"    "yellow" "red"    0 0 0 "yellow")))
 
 (define matriz2 '(("red"    "yellow" "yellow" "red"    "yellow" "yellow" "red")
-                  ("red"    "red"    "red"    "red"    "yellow" "red"    "red")
+                  ("red"    "red"    "yellow" "red"    "yellow" "red"    "red")
                   ("yellow" "yellow" "red"    "yellow" "red"    "red"    "yellow")
-                  ("yellow" "red"    "yellow" "red"    "red"    "yellow" "yellow")
+                  ("yellow" "red"    "red"    "yellow" "red"    "yellow" "yellow")
                   ("red"    "yellow" "red"    "yellow" "yellow" "yellow" "red")
                   ("yellow" "yellow" "yellow" "red"    "red"    "red"    "yellow")))
-(define matriz3 '((0 "red"  0 0 0 0 0)
-                 (0 0 "red" 0 0 0 0)
-                 (0 0 0 "red" 0 0 0)
-                 (0 0 0 0 "red" 0 0)
-                 (0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)))
+(define matriz3 '((0 "red" 0     0     0     0 0)
+                  (0 0     "red" 0     0     0 0)
+                  (0 0     0     "red" 0     0 0)
+                  (0 0     0     0     "red" 0 0)
+                  (0 0     0     0     0     0 0)
+                  (0 0     0     0     0     0 0)))
+(define matriz4 '((1 1 1 1 0 1 1)
+                  (0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0)))
 ;(board-can-play? matriz1)
 ;(board-can-play? empty-board)
 ;(board-can-play? matriz2)
@@ -78,21 +84,48 @@ b7|#
 
 
 ;board-check-vertical-win
+;(board-check-vertical-win matriz1)
 ;(board-check-vertical-win matriz2)
+;(board-check-vertical-win matriz3)
+
 
 
 ;board-check-horizontal-win
+;(board-check-horizontal-win matriz1)
 ;(board-check-horizontal-win matriz2)
+;(board-check-horizontal-win matriz3)
+
 
 
 ;board-check-diagonal-win
+;(board-check-diagonal-win matriz1)
+;(board-check-diagonal-win matriz2)
 ;(board-check-diagonal-win matriz3)
 
 
+
+;board-who-is-winner
+;(board-who-is-winner matriz1)
+;(board-who-is-winner matriz2)
+;(board-who-is-winner matriz3)
+
+
+
 ;game
-;(define new-game (game p1 p2 empty-board 1))
-;(define updated-game (game p1 p3 matriz1 2))
-;(define ug2 (game p2 p3 matriz2 1))
+(define new-game (game p1 p2 empty-board 1))
+(define updated-game (game p1 p3 matriz1 2))
+(define ug2 (game p2 p3 matriz2 1))
+(define ug3 (game p2 p3 matriz4 1))
 ;new-game
 ;updated-game
 ;ug2
+
+
+
+;game-history
+;(game-history new-game)
+
+
+
+(game-is-draw? ug3)
+

@@ -1,6 +1,7 @@
 #lang racket
 (provide player)
 (provide player-get-color)
+(provide player-get-remaining-pieces)
 
 ;TDA player: La estructura de player se conforma por una lista con los elementos que identifican a un jugador, como su id, nombre, color, victorias, derrotas, empates y piezas restantes.
 
@@ -26,6 +27,12 @@
 
 (define player-get-color
   (lambda player (list-ref player 2)))
+
+
+
+(define player-get-remaining-pieces
+  (lambda (player)
+    (last player)))
 
 
 

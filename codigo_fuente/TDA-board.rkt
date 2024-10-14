@@ -9,6 +9,7 @@
 (provide board-check-vertical-win)
 (provide board-check-horizontal-win)
 (provide board-check-diagonal-win)
+(provide board-who-is-winner)
 
 
 ;;;TDA board: Estructura que representa un tablero 6x7 de conecta 4 en base de una matriz, hecha con una lista de listas.
@@ -263,26 +264,30 @@
     ; Tipo recursión: Natural
     (define check-all-diagonal
       (lambda (board fila columna)
-      (cond
-        [(and (equal? fila board-get-filas) (equal? columna board-get-columnas)) 0]
-        [(> columna board-get-columnas) (check-all-diagonal board (add1 fila) 0)]
-        [(not (equal? (check-up-der board fila columna 1) #f)) (check-up-der board fila columna 1)]
-        [(not (equal? (check-up-izq board fila columna 1) #f)) (check-up-izq board fila columna 1)]
-        [(not (equal? (check-down-der board fila columna 1) #f)) (check-down-der board fila columna 1)]
-        [(not (equal? (check-down-izq board fila columna 1) #f)) (check-down-izq board fila columna 1)]
-        [else (check-all-diagonal board fila (add1 columna))])))
+        (cond
+          [(and (equal? fila board-get-filas) (equal? columna board-get-columnas)) 0]
+          [(> columna board-get-columnas) (check-all-diagonal board (add1 fila) 0)]
+          [(not (equal? (check-up-der board fila columna 1) #f)) (check-up-der board fila columna 1)]
+          [(not (equal? (check-up-izq board fila columna 1) #f)) (check-up-izq board fila columna 1)]
+          [(not (equal? (check-down-der board fila columna 1) #f)) (check-down-der board fila columna 1)]
+          [(not (equal? (check-down-izq board fila columna 1) #f)) (check-down-izq board fila columna 1)]
+          [else (check-all-diagonal board fila (add1 columna))])))
 
 
     (check-all-diagonal board 0 0)))
 
 
 
-; Descripción: funcion que verifica el estado del tablero y entregar el posible ganador.
+; Descripción: funcion que verifica el estado del tablero usando las ultimas 3 funciones y entrega el posible ganador.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: No aplica
-; IDEA: Realizar de forma declarativa.
-;(define board-who-is-winner
-;  (lambda board int #|trabajar|#))
 
-;ejemplo de uso: (board-who-is-winner updated-board)
+(define board-who-is-winner
+  (lambda (board)
+    (cond
+      [(not (equal? (board-check-vertical-win board) 0)) (board-check-vertical-win board)]
+      [(not (equal? (board-check-horizontal-win board) 0)) (board-check-horizontal-win board)]
+      [(not (equal? (board-check-diagonal-win board) 0)) (board-check-diagonal-win board)]
+      [else 0])))
+

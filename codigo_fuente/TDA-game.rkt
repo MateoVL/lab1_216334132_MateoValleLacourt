@@ -1,12 +1,20 @@
 #lang racket
+(require "TDA-player.rkt")
+(require "TDA-board.rkt")
+
 (provide game)
 (provide game-get-p1)
 (provide game-get-p2)
+(provide game-history)
+(provide game-is-draw?)
 
 ;;;TDA-game: Estuctura que representa un juego, con todas sus caracteristicas, como los jugadores, el tablero, y el turno actual. Representada como una lista.
 
 
-;;CONSTRUCTORES
+
+ ;;;;;;;;;;;;;;;;;
+ ; CONSTRUCTORES ;
+ ;;;;;;;;;;;;;;;;;
 
 
 ; Descripción: funcion que crea una nueva partida.
@@ -15,20 +23,30 @@
 ; Tipo recursión: No aplica
 
 (define game
-  (lambda (player1 player2 board current-turn) (list player1 player2 board current-turn)))
+  (lambda (player1 player2 board current-turn) (list player1 player2 board current-turn (list (board)))))
 
 
 
-;;PERTENENCIA
+
+ ;;;;;;;;;;;;;;;
+ ; PERTENENCIA ;
+ ;;;;;;;;;;;;;;;
 
 
-;;SELECTORES
+
+
+ ;;;;;;;;;;;;;;
+ ; SELECTORES ;
+ ;;;;;;;;;;;;;;
+
 
 (define game-get-p1
-  (lambda game (list-ref game 0)))
+  (lambda (game)
+    (list-ref game 0)))
 
 (define game-get-p2
-  (lambda game (list-ref game 1)))
+  (lambda (game)
+    (list-ref game 1)))
 
 
 
@@ -47,14 +65,18 @@
 ; Dom: game (game)
 ; Rec: jugador del turno (player)
 ; Tipo recursión: No aplica
-;(define game-get-board
-;  (lambda game board #|TAREA|#))
+
+(define game-get-board
+  (lambda (game) (list-ref game 2)))
 
 ;ejemplo de uso: (game-get-board current-game)
 
 
 
-;;MODIFICADORES
+
+ ;;;;;;;;;;;;;;;;;
+ ;;MODIFICADORES ;
+ ;;;;;;;;;;;;;;;;;
 
 
 ; Descripción: funcion que finaliza el juego, actualizando las estadisticas de los jugadores.
@@ -80,18 +102,19 @@
 
 
 
-;;OTROS
 
+ ;;;;;;;;;
+ ; OTROS ;
+ ;;;;;;;;;
 
 ; Descripción: funcion que genera un historial de movimientos de la partida.
 ; Dom: game (game)
 ; Rec: movimientos (list de pares)
 ; Tipo recursión: No aplica
-; IDEA: resolver de manera declarativa
-;(define game-history
-;  (lambda game lista de pares #|TAREA|#))
-
-;ejemplo de uso: (game-history updated-game)
+;POR DEFINIR
+(define game-history
+  (lambda (game)
+    (append game (cons (game-get-board game) null))))
 
 
 
@@ -99,10 +122,13 @@
 ; Dom: game (game)
 ; Rec: empate (boolean)
 ; Tipo recursión: No aplica
-;(define game-is-draw?
-;  (lambda game boolean #|TAREA|#))
 
-;ejemplo de uso: (game-is-draw? current-game)
-
+(define game-is-draw?
+  (lambda (game)
+    (if (and
+         (or(not (board-can-play? (game-get-board game))) (and (equal? (player-get-remaining-pieces (game-get-p1 game)) 0) (equal? (player-get-remaining-pieces (game-get-p2 game)) 0)))
+         (equal? (board-who-is-winner (game-get-board game)) 0))
+        #t
+        #f)))
 
 
