@@ -113,9 +113,9 @@ b7|#
 
 ;game
 (define new-game (game p1 p2 empty-board 1))
-(define updated-game (game p1 p3 matriz1 2))
-(define ug2 (game p2 p3 matriz2 1))
-(define ug3 (game p2 p3 matriz4 1))
+;(define updated-game (game p1 p3 matriz1 2))
+;(define ug2 (game p1 p2 matriz3 1))
+;(define ug3 (game p2 p3 matriz4 2))
 ;new-game
 ;updated-game
 ;ug2
@@ -127,5 +127,25 @@ b7|#
 
 
 
-(game-is-draw? ug3)
+;game-is-draw?
+;(game-is-draw? ug3)
+
+
+
+;updated-player
+;(define updated-player (player-update-stats p1 "win"))
+
+
+
+;game-get-current-player
+;(game-get-current-player new-game)
+
+
+;(define ended-game (game-set-end ug2))
+(define ug1 (game-player-set-move new-game p1 3))
+(define ug2 (game-player-set-move ug1 p2 4))
+(define ug3 (game-player-set-move ug2 p1 4))
+
+;(game-set-history ug1 (cons 5 6))
+
 

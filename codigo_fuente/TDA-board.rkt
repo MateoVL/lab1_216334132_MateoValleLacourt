@@ -109,7 +109,7 @@
 
 (define board-set-elem
   (lambda (board fila columna elem)
-    (if (equal? fila -1) -1 (list-set board fila (list-set (list-ref board fila) columna elem)))))
+    (if (or (equal? fila -1) (> columna board-get-columnas) (< columna 0)) -1 (list-set board fila (list-set (list-ref board fila) columna elem)))))
 
 
 
@@ -120,7 +120,7 @@
 
 (define board-set-play-piece
   (lambda (board column piece)
-    (board-set-elem board (board-get-fila-baja board column) column piece)))
+    (if (equal? (board-set-elem board (board-get-fila-baja board column) column piece) -1) -1 (board-set-elem board (board-get-fila-baja board column) column piece))))
 
 
 
