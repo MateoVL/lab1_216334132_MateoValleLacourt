@@ -3,10 +3,19 @@
 (provide player-update-stats)
 (provide player-get-remaining-pieces)
 (provide player-get-color)
-;TDA player: La estructura de player se conforma por una lista con los elementos que identifican a un jugador, como su id, nombre, color, victorias, derrotas, empates y piezas restantes.
+(provide player-set-sub1-fichas)
+(provide player-get-id)
+
+(require "TDA-piece.rkt")
 
 
-;CONSTRUCTORES
+;;;TDA player: La estructura de player se conforma por una lista con los elementos que identifican a un jugador, como su id, nombre, color, victorias, derrotas, empates y piezas restantes.
+
+
+
+ ;;;;;;;;;;;;;;;;;
+ ; CONSTRUCTORES ;
+ ;;;;;;;;;;;;;;;;;
 
 
 ; Descripción: funcion que permite crear un jugador.
@@ -19,31 +28,76 @@
 
 
 
-;;PERTENENCIA
+
+ ;;;;;;;;;;;;;;;
+ ; PERTENENCIA ;
+ ;;;;;;;;;;;;;;;
 
 
-;;SELECTORES
 
+ ;;;;;;;;;;;;;;
+ ; SELECTORES ;
+ ;;;;;;;;;;;;;;
+
+
+; Descripción: funcion que entrega el id de un jugador.
+; Dom: player (player)
+; Rec: id de jugador (int)
+; Tipo recursión: No aplica
+
+(define player-get-id
+  (lambda (player)
+    (list-ref player 0)))
+
+
+; Descripción: funcion que entrega el color de ficha de un jugador.
+; Dom: player (player)
+; Rec: color de ficha (string)
+; Tipo recursión: No aplica
 
 (define player-get-color
-  (lambda (player) (list-ref player 2)))
+  (lambda (player)
+    (list-ref player 2)))
 
 
+
+; Descripción: funcion que entrega la cantidad de piezas disponibles de un jugador.
+; Dom: player (player)
+; Rec: cantidad de piezas (int)
+; Tipo recursión: No aplica
 
 (define player-get-remaining-pieces
   (lambda (player)
     (last player)))
 
 
+
+; Descripción: funcion que entrega las victorias de un jugador.
+; Dom: player (player)
+; Rec: cantidad de victorias (int)
+; Tipo recursión: No aplica
+
 (define player-get-wins
   (lambda (player)
     (list-ref player 3)))
 
 
+
+; Descripción: funcion que entrega las derrotas de un jugador.
+; Dom: player (player)
+; Rec: cantidad de derrotas (int)
+; Tipo recursión: No aplica
+
 (define player-get-losses
   (lambda (player)
     (list-ref player 4)))
 
+
+
+; Descripción: funcion que entrega los empates de un jugador.
+; Dom: player (player)
+; Rec: cantidad de empates (int)
+; Tipo recursión: No aplica
 
 (define player-get-draws
   (lambda (player)
@@ -51,36 +105,71 @@
 
 
 
-;;MODIFICADORES
 
-(define player-set-wins
-  (lambda (player elemento)
-    (list-set player 3 elemento)))
-
-
-(define player-set-losses
-  (lambda (player elemento)
-    (list-set player 4 elemento)))
+;;;;;;;;;;;;;;;;;
+;;MODIFICADORES ;
+;;;;;;;;;;;;;;;;;
 
 
-(define player-set-draws
-  (lambda (player elemento)
-    (list-set player 5 elemento)))
+; Descripción: funcion que aumenta la cantidad de victorias de un jugador por una unidad.
+; Dom: player (player) X elemento (int)
+; Rec: jugador con victorias actualizadas (player)
+; Tipo recursión: No aplica
+
+(define player-set-add1-wins
+  (lambda (player)
+    (list-set player 3 (add1 (player-get-wins player)))))
 
 
-;;OTROS
+
+; Descripción: funcion que aumenta la cantidad de derrotas de un jugador por una unidad.
+; Dom: player (player) X elemento (int)
+; Rec: jugador con derrotas actualizadas (player)
+; Tipo recursión: No aplica
+
+(define player-set-add1-losses
+  (lambda (player)
+    (list-set player 4 (add1 (player-get-losses player)))))
+
+
+
+; Descripción: funcion que aumenta la cantidad de empates de un jugador por una unidad.
+; Dom: player (player) X elemento (int)
+; Rec: jugador con empates actualizados (player)
+; Tipo recursión: No aplica
+
+(define player-set-add1-draws
+  (lambda (player)
+    (list-set player 5 (add1 (player-get-draws player)))))
+
+
+
+; Descripción: funcion que resta la cantidad de fichas de un jugador por una unidad.
+; Dom: player (player)
+; Rec: jugador con fichas actualizadas (player)
+; Tipo recursión: No aplica
+
+(define player-set-sub1-fichas
+  (lambda (player)
+    (list-set player 6 (sub1 (player-get-remaining-pieces player)))))
+
+
+
+
+ ;;;;;;;;;
+ ; OTROS ;
+ ;;;;;;;;;
 
 
 ; Descripción: funcion que actualiza las estadisticas del jugador despues de un juego (victoria, derrota o empate) y retorna booleano dependiendo si es empate o no.
-; Dom: player (player) X result (string: "win", "loss", o "draw")
+; Dom: player (player) X result (string: "win" | "loss" | "draw")
 ; Rec: player actualizado (player)
 ; Tipo recursión: No aplica
 
 (define player-update-stats
   (lambda (player result)
     (cond
-      [(equal? result "win") (cons #f (player-set-wins player (add1 (player-get-wins player))))]
-      [(equal? result "loss") (cons #f (player-set-losses player (add1 (player-get-losses player))))]
-      [(equal? result "draw") (cons #t (player-set-draws player (add1 (player-get-draws player))))])))
-
+      [(equal? result "win") #|(cons #f |#(player-set-add1-wins player)#|)|#]
+      [(equal? result "loss") #|(cons #f |#(player-set-add1-losses player)#|)|#]
+      [(equal? result "draw") #|(cons #t |#(player-set-add1-draws player)#|)|#])))
 

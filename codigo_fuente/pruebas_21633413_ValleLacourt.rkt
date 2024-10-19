@@ -1,10 +1,10 @@
 #lang racket
-(require "TDA-player.rkt")
+#|(require "TDA-player.rkt")
 (require "TDA-piece.rkt")
 (require "TDA-board.rkt")
-(require "TDA-game.rkt")
+(require "TDA-game.rkt")|#
 
-
+#|
 ;ejemplos de uso:
 
 ;player
@@ -148,4 +148,18 @@ b7|#
 
 ;(game-set-history ug1 (cons 5 6))
 
+
+
+(define lista
+  (list 1 2 3 4))
+
+(define set-final
+  (lambda (lista elem)
+    (reverse (cons elem (reverse lista)))))
+
+
+
+(define caracter
+  (lambda (cadena)
+    (string-upcase (string #\( (string-ref cadena 0) #\)))))|#
 

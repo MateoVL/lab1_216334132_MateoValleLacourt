@@ -2,7 +2,6 @@
 (require "TDA-player.rkt")
 (require "TDA-piece.rkt")
 
-
 (provide board)
 (provide board-can-play?)
 (provide board-set-play-piece)
@@ -25,14 +24,13 @@
 ; Dom: sin parametros de entrada
 ; Rec: tablero vacio (board)
 ; Tipo recursión: No aplica
-; TAREA: definir que es vacio
 
-(define (board) '((0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)
-                 (0 0 0 0 0 0 0)))
+(define (board) '(("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")))
 
 
 
@@ -48,7 +46,7 @@
  ;;;;;;;;;;;;;;
 
 
-; Descripción: funcion que retorna la cantidad de filas del tablero conecta 4.
+; Descripción: funcion que retorna la cantidad de filas del tablero conecta 4 menos uno.
 ; Dom: sin parametros de entrada
 ; Rec: cantidad-filas (int)
 ; Tipo recursión: No aplica
@@ -57,7 +55,7 @@
 
 
 
-; Descripción: funcion que retorna la cantidad de columnas del tablero conecta 4.
+; Descripción: funcion que retorna la cantidad de columnas del tablero conecta 4 menos uno.
 ; Dom: sin parametros de entrada
 ; Rec: cantidad columnas (int)
 ; Tipo recursión: No aplica
@@ -68,7 +66,7 @@
 
 ; Descripción: funcion que retorna el elemento del tablero dada una fila y una columna.
 ; Dom: tablero (board) X fila (int) X columna (int)
-; Rec: posicion vertical donde caería la ficha (int)
+; Rec: elemento del tablero (string)
 ; Tipo recursión: No aplica
 
 (define board-get-elem
@@ -80,19 +78,19 @@
 ; Descripción: funcion que retorna la posicion vertical en la que caería la ficha en una columna dada.
 ; Dom: tablero (board) X columna (int)
 ; Rec: posicion vertical donde caería la ficha (int)
-; Tipo recursión: Natural
+; Tipo recursión: Cola
 
 (define board-get-fila-baja
   (lambda (tablero columna)
 
-    (define fila-baja-in
-      (lambda (tablero fila columna)
+    (define fila-baja-inner
+      (lambda (tablero acomulador-fila columna)
         (cond
-          [(< fila 0) -1]
-          [(not(piece? (board-get-elem tablero fila columna))) fila]
-          [(fila-baja-in tablero (sub1 fila) columna)])))
+          [(< acomulador-fila 0) -1]
+          [(equal? "( )" (board-get-elem tablero acomulador-fila columna)) acomulador-fila]
+          [(fila-baja-inner tablero (sub1 acomulador-fila) columna)])))
     
-    (fila-baja-in tablero board-get-filas columna)))
+    (fila-baja-inner tablero board-get-filas columna)))
 
 
 
@@ -109,18 +107,22 @@
 
 (define board-set-elem
   (lambda (board fila columna elem)
-    (if (or (equal? fila -1) (> columna board-get-columnas) (< columna 0)) -1 (list-set board fila (list-set (list-ref board fila) columna elem)))))
+    (if (or (equal? fila -1) (> columna board-get-columnas) (< columna 0))
+        -1
+        (list-set board fila (list-set (list-ref board fila) columna elem)))))
 
 
 
-; Descripción: funcion que permite realizar una jugada en el tablero declarativamente.
+; Descripción: funcion que permite realizar una jugada en el tablero.
 ; Dom: board (board) X column (int) X piece (piece)
 ; Rec: tablero actualizado (board)
 ; Tipo recursión: No aplica
 
 (define board-set-play-piece
   (lambda (board column piece)
-    (if (equal? (board-set-elem board (board-get-fila-baja board column) column piece) -1) -1 (board-set-elem board (board-get-fila-baja board column) column piece))))
+    (if (equal? (board-get-fila-baja board column) -1)
+        -1
+        (board-set-elem board (board-get-fila-baja board column) column piece))))
 
 
 
@@ -136,7 +138,8 @@
 ; Tipo recursión: No aplica
 
 (define board-can-play?
-  (lambda (board) (list? (member 0 (first board)))))
+  (lambda (board)
+    (list? (member "( )" (first board)))))
 
 
 
@@ -152,15 +155,12 @@
           (lambda (board fila columna contador)
             (cond
               [(> columna board-get-columnas) 0]
-
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) red-piece)) 1]
-
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) yellow-piece)) 2]
-
-              [(equal? fila board-get-filas) (vertical-win board 0 (add1 columna) 1)]
-
-              [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) columna)) (vertical-win board (add1 fila) columna (add1 contador))]
-
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+              [(equal? fila board-get-filas)
+               (vertical-win board 0 (add1 columna) 1)]
+              [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) columna))
+               (vertical-win board (add1 fila) columna (add1 contador))]
               [else (vertical-win board (add1 fila) columna 1)])))
 
     (vertical-win board 0 0 1)))
@@ -174,35 +174,20 @@
 
 (define board-check-horizontal-win
   (lambda (board)
-   
-    ; Descripción: funcion que aplica a cada fila la funcion horizontal-win-fila, verifica recursivamente, si la funcion es pieza roja, retorna 1(asumiendo que jugador 1 elije siempre rojo y jugador 2 amarillo), 2 si es amarillo y 0 si no hay victorias.
-    ; Dom: board (board) X pos-fila (int)
-    ; Rec: 1 (int) | 2 (int) | 0 (int)
-    ; Tipo recursión: Natural
 
-    (define recorrer-filas
-      (lambda (board pos-fila)
-
-        ; Descripción: funcion que dada una lista, revisa recursivamente si hay 4 elementos iguales consecutivos, si lo hay, retorna dicho elemento, si no, falso.
-        ; Dom: lista (list) X pos (int) X contador (int)
-        ; Rec: ficha-repetida (piece) | falso (boolean)
-        ; Tipo recursión: Natural
-    
-        (define horizontal-win-fila
-          (lambda (lista pos contador)
-            (cond
-              [(equal? contador 4) (list-ref lista pos)]
-              [(and (equal? pos board-get-columnas) (not(equal? contador 4))) #f]
-              [(equal? (list-ref lista pos) (list-ref lista (add1 pos))) (horizontal-win-fila lista (add1 pos) (add1 contador))]
-              [else (horizontal-win-fila lista (add1 pos) 1)])))
-
+    (define horizontal-win
+      (lambda (board fila columna contador)
         (cond
-          [(> pos-fila board-get-filas) 0]
-          [(equal? (horizontal-win-fila (list-ref board pos-fila) 0 1) red-piece) 1]
-          [(equal? (horizontal-win-fila (list-ref board pos-fila) 0 1) yellow-piece) 2]
-          [else (recorrer-filas board (add1 pos-fila))])))
-    
-    (recorrer-filas board 0)))
+          [(> fila board-get-filas) 0]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+          [(equal? columna board-get-columnas)
+           (horizontal-win board (add1 fila) 0 1)]
+          [(equal? (board-get-elem board fila columna) (board-get-elem board fila (add1 columna)))
+           (horizontal-win board fila (add1 columna) (add1 contador))]
+          [else (horizontal-win board fila (add1 columna) 1)])))
+
+    (horizontal-win board 0 0 1)))
 
 
 
@@ -214,65 +199,37 @@
 (define board-check-diagonal-win
   (lambda (board)
 
-    ; Descripción: Para generalizar, las siguientes 4 funciones check dentro de board-check-diagonal-win hacen lo mismo pero en distintas direcciones, utilizan recursion natural para ver si hay 4 fichas iguales en una direccion diagonal y retorna 1,2 o 0 dependiendo de la funcion de afuera.
-    ; Dom: board (board) X fila (int) X columna (int) X contador (int)
-    ; Rec: 1 (int) | 2 (int) | 0 (int)
-    ; Tipo recursión: Natural
-    (define check-up-der
-      (lambda (board fila columna contador)
-        (cond
-          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) red-piece)) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) yellow-piece)) 2]
-          [(or (< (sub1 fila) 0) (> (add1 columna) board-get-columnas)) #f]
-          [(equal? (board-get-elem board fila columna) (board-get-elem board (sub1 fila) (add1 columna))) (check-up-der board (sub1 fila) (add1 columna) (add1 contador))]
-          [else #f])))
-
-    (define check-up-izq
-      (lambda (board fila columna contador)
-        (cond
-          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) red-piece)) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) yellow-piece)) 2]
-          [(or (< (sub1 fila) 0) (< (sub1 columna) 0)) #f]
-          [(equal? (board-get-elem board fila columna) (board-get-elem board (sub1 fila) (sub1 columna))) (check-up-izq board (sub1 fila) (sub1 columna) (add1 contador))]
-          [else #f])))
-
     (define check-down-der
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) red-piece)) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) yellow-piece)) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
           [(or (> (add1 fila) board-get-filas) (> (add1 columna) board-get-columnas)) #f]
-          [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (add1 columna))) (check-down-der board (add1 fila) (add1 columna) (add1 contador))]
+          [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (add1 columna)))
+           (check-down-der board (add1 fila) (add1 columna) (add1 contador))]
           [else #f])))
 
     (define check-down-izq
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) red-piece)) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) yellow-piece)) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
           [(or (> (add1 fila) board-get-filas) (< (sub1 columna) 0)) #f]
-          [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (sub1 columna))) (check-down-izq board (add1 fila) (sub1 columna) (add1 contador))]
+          [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (sub1 columna)))
+           (check-down-izq board (add1 fila) (sub1 columna) (add1 contador))]
           [else #f])))
 
-    ; Descripción: funcion que utiliza las 4 anteriores en cada posicion del tablero para verificar si existe alguna win en diagonal o no.
-    ; Dom: board (board) X fila (int) X columna (int)
-    ; Rec: 1 (int) | 2 (int) | 0 (int)
-    ; Tipo recursión: Natural
+    
     (define check-all-diagonal
       (lambda (board fila columna)
         (cond
-          [(and (equal? fila board-get-filas) (equal? columna board-get-columnas)) 0]
+          [(equal? fila 3) 0]
           [(> columna board-get-columnas) (check-all-diagonal board (add1 fila) 0)]
-          [(not (equal? (check-up-der board fila columna 1) #f)) (check-up-der board fila columna 1)]
-          [(not (equal? (check-up-izq board fila columna 1) #f)) (check-up-izq board fila columna 1)]
           [(not (equal? (check-down-der board fila columna 1) #f)) (check-down-der board fila columna 1)]
           [(not (equal? (check-down-izq board fila columna 1) #f)) (check-down-izq board fila columna 1)]
           [else (check-all-diagonal board fila (add1 columna))])))
-
 
     (check-all-diagonal board 0 0)))
 
@@ -290,4 +247,3 @@
       [(not (equal? (board-check-horizontal-win board) 0)) (board-check-horizontal-win board)]
       [(not (equal? (board-check-diagonal-win board) 0)) (board-check-diagonal-win board)]
       [else 0])))
-

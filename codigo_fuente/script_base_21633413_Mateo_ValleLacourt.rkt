@@ -71,9 +71,9 @@
 (define updated-p2 (player-update-stats p2 "loss"))
 
 ; 11. Mostrar historial de movimientos
-(display "Historial de movimientos: ")
+(display "Historial de movimientos:\n")
 (game-history ended-game)
 
 ; 12. Mostrar estado final del tablero
-(display "Estado final del tablero: ")
+(display "Estado final del tablero:\n")
 (game-get-board ended-game)
