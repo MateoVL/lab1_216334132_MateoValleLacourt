@@ -1,6 +1,5 @@
 #lang racket
 (provide piece)
-;(provide piece?)
 (provide piece-get-name)
 (provide piece-get-piece)
 
@@ -29,19 +28,6 @@
  ;;;;;;;;;;;;;;;
  ; PERTENENCIA ;
  ;;;;;;;;;;;;;;;
-
-
-; Descripción: funcion que determina si una entrada dada es una ficha de conecta 4, revisa si es un string "red" o "yellow".
-; Dom: dato (any)
-; Rec: es-pieza? (boolean)
-; Tipo recursión: No aplica
-
-#|(define piece?
-  (lambda (dato)
-    (if (or (equal? dato "red") (equal? dato "yellow"))
-        #t
-        #f)))|#
-
 
 
 

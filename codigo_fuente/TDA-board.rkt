@@ -144,19 +144,19 @@
 
 
 ; Descripción: funcion que permite verificar si algun jugador ha ganado verticalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical.
-; Dom: board (board)
+; Dom: board (board) X p1 (player) X p2 (player)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: Natural
 
 (define board-check-vertical-win
-  (lambda (board)
+  (lambda (board p1 p2)
 
     (define vertical-win
           (lambda (board fila columna contador)
             (cond
               [(> columna board-get-columnas) 0]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
               [(equal? fila board-get-filas)
                (vertical-win board 0 (add1 columna) 1)]
               [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) columna))
@@ -168,19 +168,19 @@
 
 
 ; Descripción: funcion que permite verificar si algun jugador ha ganado horizontalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal.
-; Dom: board (board)
+; Dom: board (board) X p1 (player) X p2 (player)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: Natural
 
 (define board-check-horizontal-win
-  (lambda (board)
+  (lambda (board p1 p2)
 
     (define horizontal-win
       (lambda (board fila columna contador)
         (cond
           [(> fila board-get-filas) 0]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
           [(equal? columna board-get-columnas)
            (horizontal-win board (add1 fila) 0 1)]
           [(equal? (board-get-elem board fila columna) (board-get-elem board fila (add1 columna)))
@@ -192,19 +192,19 @@
 
 
 ; Descripción: funcion que permite verificar si algun jugador ha ganado diagonalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal.
-; Dom: board (board)
+; Dom: board (board) X p1 (player) X p2 (player)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: Cola/Backtracking
 
 (define board-check-diagonal-win
-  (lambda (board)
+  (lambda (board p1 p2)
 
     (define check-down-der
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
           [(or (> (add1 fila) board-get-filas) (> (add1 columna) board-get-columnas)) #f]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (add1 columna)))
            (check-down-der board (add1 fila) (add1 columna) (add1 contador))]
@@ -214,8 +214,8 @@
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(R)")) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) "(Y)")) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
           [(or (> (add1 fila) board-get-filas) (< (sub1 columna) 0)) #f]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (sub1 columna)))
            (check-down-izq board (add1 fila) (sub1 columna) (add1 contador))]
@@ -236,14 +236,14 @@
 
 
 ; Descripción: funcion que verifica el estado del tablero usando las ultimas 3 funciones y entrega el posible ganador.
-; Dom: board (board)
+; Dom: board (board) X p1 (player) X p2 (player)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: No aplica
 
 (define board-who-is-winner
-  (lambda (board)
+  (lambda (board p1 p2)
     (cond
-      [(not (equal? (board-check-vertical-win board) 0)) (board-check-vertical-win board)]
-      [(not (equal? (board-check-horizontal-win board) 0)) (board-check-horizontal-win board)]
-      [(not (equal? (board-check-diagonal-win board) 0)) (board-check-diagonal-win board)]
+      [(not (equal? (board-check-vertical-win board p1 p2) 0)) (board-check-vertical-win board p1 p2)]
+      [(not (equal? (board-check-horizontal-win board p1 p2) 0)) (board-check-horizontal-win board p1 p2)]
+      [(not (equal? (board-check-diagonal-win board p1 p2) 0)) (board-check-diagonal-win board p1 p2)]
       [else 0])))

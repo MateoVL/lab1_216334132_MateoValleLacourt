@@ -3,6 +3,7 @@
 (provide player-update-stats)
 (provide player-get-remaining-pieces)
 (provide player-get-color)
+(provide player-get-piece)
 (provide player-set-sub1-fichas)
 (provide player-get-id)
 
@@ -24,7 +25,7 @@
 ; Tipo recursión: No aplica
 
 (define player
-  (lambda (id name color wins losses draws remaining-pieces) (list id name color wins losses draws remaining-pieces)))
+  (lambda (id name color wins losses draws remaining-pieces) (list id name (piece color) wins losses draws remaining-pieces)))
 
 
 
@@ -57,7 +58,18 @@
 
 (define player-get-color
   (lambda (player)
-    (list-ref player 2)))
+    (car (list-ref player 2))))
+
+
+
+; Descripción: funcion que entrega la representacion de ficha de un jugador.
+; Dom: player (player)
+; Rec: representacion ficha (string)
+; Tipo recursión: No aplica
+
+(define player-get-piece
+  (lambda (player)
+    (cdr (list-ref player 2))))
 
 
 
