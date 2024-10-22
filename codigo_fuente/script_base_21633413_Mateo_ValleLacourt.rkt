@@ -48,16 +48,16 @@
 
 ; 7. Verificación de victoria
 (display "Verificación de victoria vertical: ")
-(board-check-vertical-win (game-get-board g11) (game-get-p1 g11) (game-get-p2 g11))
+(board-check-vertical-win (game-get-board g11))
 
 (display "Verificación de victoria horizontal: ")
-(board-check-horizontal-win (game-get-board g11) (game-get-p1 g11) (game-get-p2 g11))
+(board-check-horizontal-win (game-get-board g11))
 
 (display "Verificación de victoria diagonal: ")
-(board-check-diagonal-win (game-get-board g11) (game-get-p1 g11) (game-get-p2 g11))
+(board-check-diagonal-win (game-get-board g11))
 
 (display "Verificación de ganador: ")
-(board-who-is-winner (game-get-board g11) (game-get-p1 g11) (game-get-p2 g11))
+(board-who-is-winner (game-get-board g11))
 
 ; 8. Verificación de empate
 (display "¿Es empate? ")

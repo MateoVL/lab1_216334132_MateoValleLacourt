@@ -1,6 +1,5 @@
 #lang racket
 (require "TDA-player.rkt")
-(require "TDA-piece.rkt")
 (require "TDA-board.rkt")
 
 (provide game)
@@ -29,7 +28,20 @@
 ; Tipo recursión: No aplica
 
 (define game
-  (lambda (player1 player2 board current-turn) (list player1 player2 board current-turn (list))))
+  (lambda (player1 player2 board current-turn) (list player1 player2 (board-2.0 board player1 player2) current-turn (list))))
+
+
+
+; Descripción: funcion que actualiza el historial de un juego dado su estado anterior.
+; Dom: game (game) X player (player) X column (int)
+; Rec: juego actualizado (game)
+; Tipo recursión: No aplica
+
+(define game-with-history
+  (lambda (juego juego-previo move)
+    (if (equal? move null)
+        (list-set juego 4 (list-ref juego-previo 4))
+        (list-set juego 4 (reverse (cons move (reverse (list-ref juego-previo 4))))))))
 
 
 
@@ -112,8 +124,8 @@
 (define game-set-end
   (lambda (juego)
     (cond
-      [(equal? (board-who-is-winner (game-get-board juego) (game-get-p1 juego) (game-get-p2 juego)) 1)
-       (game-set-history (game
+      [(equal? (board-who-is-winner (game-get-board juego)) 1)
+       (game-with-history (game
                           (player-update-stats (game-get-p1 juego) "win")
                           (player-update-stats (game-get-p2 juego) "loss")
                           (game-get-board juego)
@@ -121,8 +133,8 @@
                          juego
                          null)]
 
-      [(equal? (board-who-is-winner (game-get-board game) (game-get-p1 juego) (game-get-p2 juego)) 2)
-       (game-set-history (game
+      [(equal? (board-who-is-winner (game-get-board game)) 2)
+       (game-with-history (game
                           (player-update-stats (game-get-p1 game) "loss")
                           (player-update-stats (game-get-p2 game) "win")
                           (game-get-board game)
@@ -130,8 +142,8 @@
                          juego
                          null)]
 
-      [(equal? (board-who-is-winner (game-get-board game) (game-get-p1 juego) (game-get-p2 juego)) 0)
-       (game-set-history (game
+      [(equal? (board-who-is-winner (game-get-board game)) 0)
+       (game-with-history (game
                           (player-update-stats (game-get-p1 game) "draw")
                           (player-update-stats (game-get-p2 game) "draw")
                           (game-get-board game)
@@ -151,7 +163,7 @@
     (cond
 
       [(and (equal? (game-get-current-turn juego) 1) (equal? (player-get-id player) (player-get-id (game-get-p1 juego))))
-       (define jugada-p1 (game-set-history (game
+       (define jugada-p1 (game-with-history (game
                                          (player-set-sub1-fichas (game-get-p1 juego))
                                          (game-get-p2 juego)
                                          (board-set-play-piece (game-get-board juego) column (player-get-piece player))
@@ -160,10 +172,10 @@
                                         (cons column (player-get-color player))))
 
        (if (equal? (game-get-board jugada-p1) -1)
-           (display "Movimiento no disponible")     ;caso jugada no disponible
+          juego                                     ;caso jugada no disponible
            (if (game-is-draw? jugada-p1)            ;sino, si es empate?
                (game-set-end jugada-p1)             ;declarar empate
-               (if (equal? (board-who-is-winner (game-get-board jugada-p1) (game-get-p1 jugada-p1) (game-get-p2 jugada-p1)) 1)     ;es victoria?
+               (if (equal? (board-who-is-winner (game-get-board jugada-p1)) 1)     ;es victoria?
                    (game-set-end jugada-p1)         ;declarar victoria
                    jugada-p1)))]
 
@@ -171,7 +183,7 @@
 
       
       [(and (equal? (game-get-current-turn juego) 2) (equal? (player-get-id player) (player-get-id (game-get-p2 juego))))
-       (define jugada-p2 (game-set-history (game
+       (define jugada-p2 (game-with-history (game
                                             (game-get-p1 juego)
                                             (player-set-sub1-fichas (game-get-p2 juego))
                                             (board-set-play-piece (game-get-board juego) column (player-get-piece player))
@@ -180,25 +192,12 @@
                                            (cons column (player-get-color player))))
 
        (if (equal? (game-get-board jugada-p2) -1)
-           (display "Movimiento no disponible")     ;caso jugada no disponible
-           (if (game-is-draw? jugada-p2)            ;sino, si es empate?
+           juego                                  ;caso jugada no disponible
+           (if (game-is-draw? jugada-p2)          ;sino, si es empate?
                (game-set-end jugada-p2)           ;declarar empate
-               (if (equal? (board-who-is-winner (game-get-board jugada-p2) (game-get-p1 jugada-p2) (game-get-p2 jugada-p2)) 2)     ;es victoria?
-                   (game-set-end jugada-p2)      ;declarar victoria
+               (if (equal? (board-who-is-winner (game-get-board jugada-p2)) 2)     ;es victoria?
+                   (game-set-end jugada-p2)       ;declarar victoria
                    jugada-p2)))])))
-
-
-
-; Descripción: funcion que actualiza el historial de un juego dado su estado anterior.
-; Dom: game (game) X player (player) X column (int)
-; Rec: juego actualizado (game)
-; Tipo recursión: No aplica
-
-(define game-set-history
-  (lambda (juego juego-previo move)
-    (if (equal? move null)
-        (list-set juego 4 (list-ref juego-previo 4))
-        (list-set juego 4 (reverse (cons move (reverse (list-ref juego-previo 4))))))))
 
 
 
@@ -229,7 +228,7 @@
          (or (not (board-can-play? (game-get-board game)))
              (and (equal? (player-get-remaining-pieces (game-get-p1 game)) 0)
                   (equal? (player-get-remaining-pieces (game-get-p2 game)) 0)))
-         (equal? (board-who-is-winner (game-get-board game) (game-get-p1 game) (game-get-p2 game)) 0))
+         (equal? (board-who-is-winner (game-get-board game)) 0))
         #t
         #f)))
 

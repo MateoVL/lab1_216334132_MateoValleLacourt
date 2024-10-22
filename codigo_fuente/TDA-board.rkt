@@ -3,6 +3,8 @@
 (require "TDA-piece.rkt")
 
 (provide board)
+(provide board-2.0)
+(provide board-get-tablero)
 (provide board-can-play?)
 (provide board-set-play-piece)
 (provide board-check-vertical-win)
@@ -11,7 +13,7 @@
 (provide board-who-is-winner)
 
 
-;;;TDA board: Estructura que representa un tablero 6x7 de conecta 4 en base de una matriz, hecha con una lista de listas.
+;;;TDA board: Estructura que representa un tablero 6x7 de conecta 4 en base de una matriz, hecha con una lista de listas. Tambien tiene a jugador 1 y 2 de un juego.
 
 
 
@@ -25,12 +27,23 @@
 ; Rec: tablero vacio (board)
 ; Tipo recursión: No aplica
 
-(define (board) '(("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                  ("( )" "( )" "( )" "( )" "( )" "( )" "( )")))
+(define (board) (list '(("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                        ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                        ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                        ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                        ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                        ("( )" "( )" "( )" "( )" "( )" "( )" "( )")) '() '()))
+
+
+
+; Descripción: funcion que crea la representacion de tablero con el tablero, jugador 1 y 2.
+; Dom: board (board) X p1 (player) X p2 (player)
+; Rec: Representacion de tablero (board)
+; Tipo recursión: No aplica
+
+(define board-2.0
+  (lambda (board p1 p2)
+    (list-set (list-set board 1 p1) 2 p2)))
 
 
 
@@ -44,6 +57,36 @@
  ;;;;;;;;;;;;;;
  ; SELECTORES ;
  ;;;;;;;;;;;;;;
+
+
+; Descripción: funcion que retorna el tablero del TDA board.
+; Dom: board (board)
+; Rec: tablero (list)
+; Tipo recursión: No aplica
+
+(define board-get-tablero
+  (lambda (board) (car board)))
+
+
+
+; Descripción: funcion que retorna el jugador 1 de board.
+; Dom: board (board)
+; Rec: p1 (player)
+; Tipo recursión: No aplica
+
+(define board-get-p1
+  (lambda (board) (cadr board)))
+
+
+
+; Descripción: funcion que retorna el jugador 2 de board.
+; Dom: board (board)
+; Rec: p2 (player)
+; Tipo recursión: No aplica
+
+(define board-get-p2
+  (lambda (board) (caddr board)))
+
 
 
 ; Descripción: funcion que retorna la cantidad de filas del tablero conecta 4 menos uno.
@@ -71,7 +114,7 @@
 
 (define board-get-elem
   (lambda (board fila columna)
-    (list-ref (list-ref board fila) columna)))
+    (list-ref (list-ref (board-get-tablero board) fila) columna)))
 
 
 
@@ -81,16 +124,16 @@
 ; Tipo recursión: Cola
 
 (define board-get-fila-baja
-  (lambda (tablero columna)
+  (lambda (board columna)
 
     (define fila-baja-inner
-      (lambda (tablero acomulador-fila columna)
+      (lambda (board acomulador-fila columna)
         (cond
           [(< acomulador-fila 0) -1]
-          [(equal? "( )" (board-get-elem tablero acomulador-fila columna)) acomulador-fila]
-          [(fila-baja-inner tablero (sub1 acomulador-fila) columna)])))
+          [(equal? "( )" (board-get-elem board acomulador-fila columna)) acomulador-fila]
+          [(fila-baja-inner board (sub1 acomulador-fila) columna)])))
     
-    (fila-baja-inner tablero board-get-filas columna)))
+    (fila-baja-inner board board-get-filas columna)))
 
 
 
@@ -109,7 +152,7 @@
   (lambda (board fila columna elem)
     (if (or (equal? fila -1) (> columna board-get-columnas) (< columna 0))
         -1
-        (list-set board fila (list-set (list-ref board fila) columna elem)))))
+        (list-set board 0 (list-set (board-get-tablero board) fila (list-set (list-ref (board-get-tablero board) fila) columna elem))))))
 
 
 
@@ -139,7 +182,7 @@
 
 (define board-can-play?
   (lambda (board)
-    (list? (member "( )" (first board)))))
+    (list? (member "( )" (first (board-get-tablero board))))))
 
 
 
@@ -149,14 +192,14 @@
 ; Tipo recursión: Natural
 
 (define board-check-vertical-win
-  (lambda (board p1 p2)
+  (lambda (board)
 
     (define vertical-win
           (lambda (board fila columna contador)
             (cond
               [(> columna board-get-columnas) 0]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p1 board)))) 1]
+              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p2 board)))) 2]
               [(equal? fila board-get-filas)
                (vertical-win board 0 (add1 columna) 1)]
               [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) columna))
@@ -173,14 +216,14 @@
 ; Tipo recursión: Natural
 
 (define board-check-horizontal-win
-  (lambda (board p1 p2)
+  (lambda (board)
 
     (define horizontal-win
       (lambda (board fila columna contador)
         (cond
           [(> fila board-get-filas) 0]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p1 board)))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p2 board)))) 2]
           [(equal? columna board-get-columnas)
            (horizontal-win board (add1 fila) 0 1)]
           [(equal? (board-get-elem board fila columna) (board-get-elem board fila (add1 columna)))
@@ -194,17 +237,17 @@
 ; Descripción: funcion que permite verificar si algun jugador ha ganado diagonalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal.
 ; Dom: board (board) X p1 (player) X p2 (player)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
-; Tipo recursión: Cola/Backtracking
+; Tipo recursión: Natural
 
 (define board-check-diagonal-win
-  (lambda (board p1 p2)
+  (lambda (board)
 
     (define check-down-der
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p1 board)))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p2 board)))) 2]
           [(or (> (add1 fila) board-get-filas) (> (add1 columna) board-get-columnas)) #f]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (add1 columna)))
            (check-down-der board (add1 fila) (add1 columna) (add1 contador))]
@@ -214,8 +257,8 @@
       (lambda (board fila columna contador)
         (cond
           [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p1))) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece p2))) 2]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p1 board)))) 1]
+          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (player-get-piece (board-get-p2 board)))) 2]
           [(or (> (add1 fila) board-get-filas) (< (sub1 columna) 0)) #f]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (sub1 columna)))
            (check-down-izq board (add1 fila) (sub1 columna) (add1 contador))]
@@ -241,9 +284,9 @@
 ; Tipo recursión: No aplica
 
 (define board-who-is-winner
-  (lambda (board p1 p2)
+  (lambda (board)
     (cond
-      [(not (equal? (board-check-vertical-win board p1 p2) 0)) (board-check-vertical-win board p1 p2)]
-      [(not (equal? (board-check-horizontal-win board p1 p2) 0)) (board-check-horizontal-win board p1 p2)]
-      [(not (equal? (board-check-diagonal-win board p1 p2) 0)) (board-check-diagonal-win board p1 p2)]
+      [(not (equal? (board-check-vertical-win board) 0)) (board-check-vertical-win board)]
+      [(not (equal? (board-check-horizontal-win board) 0)) (board-check-horizontal-win board)]
+      [(not (equal? (board-check-diagonal-win board) 0)) (board-check-diagonal-win board)]
       [else 0])))
