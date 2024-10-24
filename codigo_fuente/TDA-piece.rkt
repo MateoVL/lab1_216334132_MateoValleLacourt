@@ -4,7 +4,7 @@
 (provide piece-get-piece)
 
 
-;;;TDA piece: Estructura que representa una pieza con la palabra de su color y una representacion de ficha con un par.
+;;;TDA piece: Estructura que representa una pieza con un par, el cual guarda la palabra de su color y una representacion de ficha para el tablero.
 
 
 

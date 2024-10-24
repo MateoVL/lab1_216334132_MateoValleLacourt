@@ -4,9 +4,9 @@ RF03 - TDA Piece - constructor: 1
 RF04 - TDA Board - constructor: 1
 RF05 - TDA Board - otros - sePuedeJugar?: 1
 RF06 - TDA Board - modificador - jugar ficha: 1
-RF07 - TDA Board - otros - verificar victoria vertical: 0,75
-RF08 - TDA Board - otros - verificar victoria horizontal: 0,75
-RF09 - TDA Board - otros - verificar victoria diagonal: 0,75
+RF07 - TDA Board - otros - verificar victoria vertical: 1
+RF08 - TDA Board - otros - verificar victoria horizontal: 1
+RF09 - TDA Board - otros - verificar victoria diagonal: 1
 RF10 - TDA Board - otros - entregarGanador: 1
 RF11 - TDA Game - constructor: 1
 RF12 - TDA Game - otros - history: 1

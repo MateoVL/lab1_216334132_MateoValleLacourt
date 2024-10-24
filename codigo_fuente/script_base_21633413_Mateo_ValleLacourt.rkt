@@ -4,9 +4,6 @@
 (require "TDA-board.rkt")
 (require "TDA-game.rkt")
 
-
-
-
 ; Script de prueba para Conecta4
 
 ; 1. Creación de jugadores (10 fichas cada uno para un juego corto)

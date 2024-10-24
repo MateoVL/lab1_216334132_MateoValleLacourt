@@ -7,116 +7,135 @@
 
 ;ejemplos de uso:
 
-;player
+;RF2: player
 (define p1 (player 1 "Juan" "red" 0 0 0 21))
 (define p2 (player 2 "Juan" "yellow" 0 0 0 21))
-(define p3 (player 1 "Mateo" "red" 10 5 2 21))
-;p1
-;p2
-;p3
+(define p3 (player 1 "Mateo" "purple" 10 5 2 21))
+(display "\nRF2: player")
+p1
+p2
+p3
+
+
+;RF3: piece
+(define red-piece (piece "red"))
+(define yellow-piece (piece "yellow"))
+(define purple-piece (piece "purple"))
+(display "\nRF3: piece")
+red-piece
+yellow-piece
+purple-piece
 
 
 
-;piece
-
-
-
-;board
+;RF4: board
 (define empty-board (board))
 (define b0 (board))
 (define tablero-vacio (board))
+(display "\nRF4: board")
 empty-board
 b0
 tablero-vacio
 
 
 
-;board-can-play?
-#|(define matriz1 '(("red"    "yellow" "red"    0 0 0 0)
-                  ("red"    "red"    "yellow" 0 0 0 0)
-                  ("red"    "yellow" "red"    0 0 0 0)
-                  ("yellow" "yellow" "red"    0 0 0 0)
-                  ("red"    "yellow" "yellow" 0 0 0 "red")
-                  ("red"    "yellow" "red"    0 0 0 "yellow")))
+;tableros de prueba
+(define tablero-1 '((("(R)" "(R)" "(A)" "(A)" "(R)" "(A)" "(A)")
+                     ("(A)" "(A)" "(R)" "(A)" "(R)" "(A)" "(R)")
+                     ("(A)" "(R)" "(R)" "(A)" "(A)" "(A)" "(R)")
+                     ("(R)" "(R)" "(A)" "(R)" "(R)" "(R)" "(A)")
+                     ("(R)" "(A)" "(R)" "(R)" "(A)" "(R)" "(A)")
+                     ("(R)" "(A)" "(A)" "(A)" "(R)" "(R)" "(A)"))
+                    (1 "Mateo" ("rojo" . "(R)") 0 0 2 0)
+                    (2 "Cristobal" ("amarillo" . "(A)") 0 0 2 0)))
 
-;(define matriz2 '(("red"    "yellow" "yellow" "red"    "yellow" "yellow" "red")
-                  ("red"    "red"    "yellow" "red"    "yellow" "red"    "red")
-                  ("yellow" "yellow" "red"    "yellow" "red"    "red"    "yellow")
-                  ("yellow" "red"    "red"    "yellow" "red"    "yellow" "yellow")
-                  ("red"    "yellow" "red"    "yellow" "yellow" "yellow" "red")
-                  ("yellow" "yellow" "yellow" "red"    "red"    "red"    "yellow")))
-;(define matriz3 '((0 "red" 0     0     0     0 0)
-                  (0 0     "red" 0     0     0 0)
-                  (0 0     0     "red" 0     0 0)
-                  (0 0     0     0     "red" 0 0)
-                  (0 0     0     0     0     0 0)
-                  (0 0     0     0     0     0 0)))
-;(define matriz4 '((1 1 1 1 0 1 1)
-                  (0 0 0 0 0 0 0)
-                  (0 0 0 0 0 0 0)
-                  (0 0 0 0 0 0 0)
-                  (0 0 0 0 0 0 0)
-                  (0 0 0 0 0 0 0)))|#
-(board-can-play? empty-board)
-(board-can-play? empty-board)
-;(board-can-play? matriz2)
+(define tablero-2 '((("( )" "( )" "( )" "( )" "( )" "(M)" "(M)")
+                     ("( )" "( )" "( )" "( )" "( )" "(A)" "(A)")
+                     ("( )" "( )" "( )" "(A)" "( )" "(M)" "(A)")
+                     ("(A)" "(A)" "( )" "(M)" "( )" "(M)" "(M)")
+                     ("(M)" "(A)" "(M)" "(M)" "(M)" "(M)" "(A)")
+                     ("(A)" "(A)" "(M)" "(A)" "(A)" "(A)" "(M)"))
+                    (1 "Toto" ("azul" . "(A)") 0 2 0 8)
+                    (2 "PapaFrita" ("morado" . "(M)") 2 0 0 8)))
+
+(define tablero-3 '((("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                     ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                     ("( )" "( )" "(R)" "( )" "( )" "( )" "( )")
+                     ("( )" "( )" "(R)" "( )" "(A)" "(A)" "(A)")
+                     ("( )" "( )" "(R)" "(A)" "(R)" "(R)" "(R)")
+                     ("(A)" "(A)" "(R)" "(R)" "(A)" "(A)" "(R)"))
+                    (1 "Mateo" ("rojo" . "(R)") 2 0 1 12)
+                    (2 "Cristobal" ("amarillo" . "(A)") 0 2 1 13)))
+
+(define tablero-4 '((("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                     ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                     ("( )" "( )" "( )" "(R)" "( )" "( )" "( )")
+                     ("( )" "( )" "(R)" "(R)" "( )" "( )" "( )")
+                     ("(Y)" "(R)" "(R)" "(Y)" "( )" "( )" "( )")
+                     ("(R)" "(Y)" "(Y)" "(Y)" "( )" "( )" "( )"))
+                    (1 "Juan" ("red" . "(R)") 2 0 0 4)
+                    (2 "Mauricio" ("yellow" . "(Y)") 0 2 0 5)))
+
+
+;RF5: board-can-play?
+(display "\nRF5: board-can-play?")
+(board-can-play? tablero-1)
+(board-can-play? tablero-2)
+(board-can-play? tablero-vacio)
 
 
 
-;board-set-play-piece
-(define b1 (board-set-play-piece b0 6 "red"))
-(define b2 (board-set-play-piece b1 6 "red"))
-(define b3 (board-set-play-piece b2 6 "red"))
-(define b4 (board-set-play-piece b3 6 "red"))
-(define b5 (board-set-play-piece b4 6 "red"))
-(define b6 (board-set-play-piece b5 6 "red"))
-(define b7 (board-set-play-piece b6 6 "red"))
+;RF6: board-set-play-piece
+(define b1 (board-set-play-piece b0 6 red-piece))
+(define b2 (board-set-play-piece b1 6 yellow-piece))
+(define b3 (board-set-play-piece b2 0 purple-piece))
+(display "\nRF6: board-set-play-piece")
 b1
 b2
 b3
-b4
-b5
-b6
-b7
 
 
 
-;board-check-vertical-win
-;(board-check-vertical-win matriz1)
-;(board-check-vertical-win matriz2)
-;(board-check-vertical-win matriz3)
+;RF7: board-check-vertical-win
+(display "\nRF7: board-check-vertical-win")
+(board-check-vertical-win tablero-1)
+(board-check-vertical-win tablero-2)
+(board-check-vertical-win tablero-3)
 
 
 
-;board-check-horizontal-win
-;(board-check-horizontal-win matriz1)
-;(board-check-horizontal-win matriz2)
-;(board-check-horizontal-win matriz3)
+;RF8: board-check-horizontal-win
+(display "\nRF8: board-check-horizontal-win")
+(board-check-horizontal-win tablero-1)
+(board-check-horizontal-win tablero-2)
+(board-check-horizontal-win tablero-3)
 
 
 
-;board-check-diagonal-win
-;(board-check-diagonal-win matriz1)
-;(board-check-diagonal-win matriz2)
-;(board-check-diagonal-win matriz3)
+;RF9: board-check-diagonal-win
+(display "\nRF9: board-check-diagonal-win")
+(board-check-diagonal-win tablero-1)
+(board-check-diagonal-win tablero-3)
+(board-check-diagonal-win tablero-4)
 
 
 
-;board-who-is-winner
-;(board-who-is-winner matriz1)
-;(board-who-is-winner matriz2)
-;(board-who-is-winner matriz3)
+;RF10: board-who-is-winner
+(display "\nRF10: board-who-is-winner")
+(board-who-is-winner tablero-1)
+(board-who-is-winner tablero-2)
+(board-who-is-winner tablero-3)
 
 
 
-;game
-;(define new-game (game p1 p2 empty-board 1))
-;(define updated-game (game p1 p3 matriz1 2))
-;(define ug2 (game p1 p2 matriz3 1))
-;(define ug3 (game p2 p3 matriz4 2))
-;new-game
-;updated-game
-;ug2
+;RF11: game
+(define new-game (game p1 p2 empty-board 1))
+(define updated-game (game p1 p3 tablero-1 2))
+(define ug2 (game p1 p2 tablero-2 1))
+(display "\nRF11: game")
+new-game
+updated-game
+ug2
 
 
 

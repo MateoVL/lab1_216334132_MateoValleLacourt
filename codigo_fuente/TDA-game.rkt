@@ -1,5 +1,6 @@
 #lang racket
 (require "TDA-player.rkt")
+(require "TDA-piece.rkt")
 (require "TDA-board.rkt")
 
 (provide game)
@@ -123,6 +124,7 @@
 
 (define game-set-end
   (lambda (juego)
+    
     (cond
       [(equal? (board-who-is-winner (game-get-board juego)) 1)
        (game-with-history (game
@@ -133,21 +135,21 @@
                          juego
                          null)]
 
-      [(equal? (board-who-is-winner (game-get-board game)) 2)
+      [(equal? (board-who-is-winner (game-get-board juego)) 2)
        (game-with-history (game
-                          (player-update-stats (game-get-p1 game) "loss")
-                          (player-update-stats (game-get-p2 game) "win")
-                          (game-get-board game)
-                          (game-get-current-turn game))
+                          (player-update-stats (game-get-p1 juego) "loss")
+                          (player-update-stats (game-get-p2 juego) "win")
+                          (game-get-board juego)
+                          (game-get-current-turn juego))
                          juego
                          null)]
 
-      [(equal? (board-who-is-winner (game-get-board game)) 0)
+      [(equal? (board-who-is-winner (game-get-board juego)) 0)
        (game-with-history (game
-                          (player-update-stats (game-get-p1 game) "draw")
-                          (player-update-stats (game-get-p2 game) "draw")
-                          (game-get-board game)
-                          (game-get-current-turn game))
+                          (player-update-stats (game-get-p1 juego) "draw")
+                          (player-update-stats (game-get-p2 juego) "draw")
+                          (game-get-board juego)
+                          (game-get-current-turn juego))
                          juego
                          null)])))
 
@@ -161,7 +163,7 @@
 (define game-player-set-move
   (lambda (juego player column)
     (cond
-
+      [(equal? (board-set-play-piece (game-get-board juego) column (player-get-piece player)) -1) juego]
       [(and (equal? (game-get-current-turn juego) 1) (equal? (player-get-id player) (player-get-id (game-get-p1 juego))))
        (define jugada-p1 (game-with-history (game
                                          (player-set-sub1-fichas (game-get-p1 juego))
@@ -169,7 +171,7 @@
                                          (board-set-play-piece (game-get-board juego) column (player-get-piece player))
                                          (add1 (game-get-current-turn juego)))
                                         juego
-                                        (cons column (player-get-color player))))
+                                        (cons column (piece-get-name (player-get-piece player)))))
 
        (if (equal? (game-get-board jugada-p1) -1)
           juego                                     ;caso jugada no disponible
@@ -189,7 +191,7 @@
                                             (board-set-play-piece (game-get-board juego) column (player-get-piece player))
                                             (sub1 (game-get-current-turn juego)))
                                            juego
-                                           (cons column (player-get-color player))))
+                                           (cons column (piece-get-name (player-get-piece player)))))
 
        (if (equal? (game-get-board jugada-p2) -1)
            juego                                  ;caso jugada no disponible
@@ -197,7 +199,8 @@
                (game-set-end jugada-p2)           ;declarar empate
                (if (equal? (board-who-is-winner (game-get-board jugada-p2)) 2)     ;es victoria?
                    (game-set-end jugada-p2)       ;declarar victoria
-                   jugada-p2)))])))
+                   jugada-p2)))]
+      [else juego])))
 
 
 
