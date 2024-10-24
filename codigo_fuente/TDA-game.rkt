@@ -163,44 +163,41 @@
 (define game-player-set-move
   (lambda (juego player column)
     (cond
-      [(equal? (board-set-play-piece (game-get-board juego) column (player-get-piece player)) -1) juego]
-      [(and (equal? (game-get-current-turn juego) 1) (equal? (player-get-id player) (player-get-id (game-get-p1 juego))))
-       (define jugada-p1 (game-with-history (game
-                                         (player-set-sub1-fichas (game-get-p1 juego))
-                                         (game-get-p2 juego)
-                                         (board-set-play-piece (game-get-board juego) column (player-get-piece player))
-                                         (add1 (game-get-current-turn juego)))
-                                        juego
-                                        (cons column (piece-get-name (player-get-piece player)))))
+      [(equal? (board-set-play-piece (game-get-board juego) column (player-get-piece player)) -1) juego]                   ;si la jugada es imposible devolver el juego sin cambios
+      [(and (equal? (game-get-current-turn juego) 1) (equal? (player-get-id player) (player-get-id (game-get-p1 juego))))  ;si el turno es correcto...
+       (define jugada-p1 (game-with-history (game                                                                          ;crear el nuevo estado de juego
+                                             (player-set-sub1-fichas (game-get-p1 juego))
+                                             (game-get-p2 juego)
+                                             (board-set-play-piece (game-get-board juego) column (player-get-piece player))
+                                             (add1 (game-get-current-turn juego)))
+                                            juego
+                                            (cons column (piece-get-name (player-get-piece player)))))
 
-       (if (equal? (game-get-board jugada-p1) -1)
-          juego                                     ;caso jugada no disponible
-           (if (game-is-draw? jugada-p1)            ;sino, si es empate?
-               (game-set-end jugada-p1)             ;declarar empate
-               (if (equal? (board-who-is-winner (game-get-board jugada-p1)) 1)     ;es victoria?
-                   (game-set-end jugada-p1)         ;declarar victoria
-                   jugada-p1)))]
+       (if (game-is-draw? jugada-p1)            ;si es empate...
+           (game-set-end jugada-p1)             ;declarar empate
+           (if (equal? (board-who-is-winner (game-get-board jugada-p1)) 1)     ;sino, si es victoria...
+               (game-set-end jugada-p1)         ;declarar victoria
+               jugada-p1))]                     ;sino, devolver neva jugada
 
 
 
       
       [(and (equal? (game-get-current-turn juego) 2) (equal? (player-get-id player) (player-get-id (game-get-p2 juego))))
        (define jugada-p2 (game-with-history (game
-                                            (game-get-p1 juego)
-                                            (player-set-sub1-fichas (game-get-p2 juego))
-                                            (board-set-play-piece (game-get-board juego) column (player-get-piece player))
-                                            (sub1 (game-get-current-turn juego)))
-                                           juego
-                                           (cons column (piece-get-name (player-get-piece player)))))
+                                             (game-get-p1 juego)
+                                             (player-set-sub1-fichas (game-get-p2 juego))
+                                             (board-set-play-piece (game-get-board juego) column (player-get-piece player))
+                                             (sub1 (game-get-current-turn juego)))
+                                            juego
+                                            (cons column (piece-get-name (player-get-piece player)))))
+       
+       (if (game-is-draw? jugada-p2)         
+           (game-set-end jugada-p2)           
+           (if (equal? (board-who-is-winner (game-get-board jugada-p2)) 2)     
+               (game-set-end jugada-p2)      
+               jugada-p2))]
 
-       (if (equal? (game-get-board jugada-p2) -1)
-           juego                                  ;caso jugada no disponible
-           (if (game-is-draw? jugada-p2)          ;sino, si es empate?
-               (game-set-end jugada-p2)           ;declarar empate
-               (if (equal? (board-who-is-winner (game-get-board jugada-p2)) 2)     ;es victoria?
-                   (game-set-end jugada-p2)       ;declarar victoria
-                   jugada-p2)))]
-      [else juego])))
+      [else juego])))  ;si el turno es incorrecto devuelve el juego sin cambios
 
 
 
