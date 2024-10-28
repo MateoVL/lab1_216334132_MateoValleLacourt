@@ -1,11 +1,2 @@
-Para cualquier instrucción especial para ejecución u otro, según aplique.
-
-Comentario de funciones:
-; Descripción: insertar descripción de la función.
-; Dom: valor1 (tipo dato) X arg2 (tipo dato) …
-; Rec: valor1 (tipo dato) X …
-; Tipo recursión: No aplica/Natural/Cola
-
-info sacada de: 
-	https://docs.racket-lang.org/reference/index.html
-	https://www.youtube.com/playlist?list=PLTd5ehIj0goMswKV4Glhr4uixrhCmihIt
+para correr los scripts, se deben abrir los archivos y clickear run, luego se pueden checkear cada funcion,
+lo mismo con el archivo de pruebas

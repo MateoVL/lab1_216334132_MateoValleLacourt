@@ -29,7 +29,7 @@
 ; Tipo recursión: No aplica
 
 (define game
-  (lambda (player1 player2 board current-turn) (list player1 player2 (board-2.0 board player1 player2) current-turn (list))))
+  (lambda (player1 player2 board current-turn) (list player1 player2 (board-with-players board player1 player2) current-turn (list))))
 
 
 

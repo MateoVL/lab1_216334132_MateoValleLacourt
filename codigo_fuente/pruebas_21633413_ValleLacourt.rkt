@@ -77,6 +77,7 @@ tablero-vacio
                     (2 "Mauricio" ("yellow" . "(Y)") 0 2 0 5)))
 
 
+
 ;RF5: board-can-play?
 (display "\nRF5: board-can-play?\n")
 (board-can-play? tablero-1)
@@ -136,7 +137,7 @@ b3
                  (2 "Mauricio" ("yellow" . "(Y)") 0 0 0 5)
                  ((("( )" "( )" "( )" "( )" "( )" "( )" "( )")
                    ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
-                   ("( )" "( )" "( )" "( )" "( )" "( )" "( )")
+                   ("( )" "( )" "( )" "(R)" "( )" "( )" "( )")
                    ("( )" "( )" "(R)" "(R)" "( )" "( )" "( )")
                    ("(Y)" "(R)" "(R)" "(Y)" "( )" "( )" "( )")
                    ("(R)" "(Y)" "(Y)" "(Y)" "( )" "( )" "( )"))
@@ -153,6 +154,44 @@ b3
                   (3 . "yellow")
                   (3 . "red")
                   (0 . "yellow"))))
+
+(define game-2 '((1 "Toto" ("azul" . "(A)") 0 0 0 8)
+                 (2 "PapaFrita" ("morado" . "(M)") 0 0 0 8)
+                 ((("( )" "( )" "( )" "( )" "( )" "(M)" "(M)")
+                   ("( )" "( )" "( )" "( )" "( )" "(A)" "(A)")
+                   ("( )" "( )" "( )" "(A)" "( )" "(M)" "(A)")
+                   ("(A)" "(A)" "( )" "(M)" "( )" "(M)" "(M)")
+                   ("(M)" "(A)" "(M)" "(M)" "(M)" "(M)" "(A)")
+                   ("(A)" "(A)" "(M)" "(A)" "(A)" "(A)" "(M)"))
+                  (1 "Toto" ("azul" . "(A)") 0 0 0 8)
+                  (2 "PapaFrita" ("morado" . "(M)") 0 0 0 8))
+                 1
+                 ((0 . "azul")
+                  (2 . "morado")
+                  (3 . "azul")
+                  (0 . "morado")
+                  (4 . "azul")
+                  (2 . "morado")
+                  (5 . "azul")
+                  (6 . "morado")
+                  (6 . "azul")
+                  (5 . "morado")
+                  (1 . "azul")
+                  (5 . "morado")
+                  (1 . "azul")
+                  (5 . "morado")
+                  (5 . "azul")
+                  (6 . "morado")
+                  (6 . "azul")
+                  (5 . "morado")
+                  (6 . "azul")
+                  (3 . "morado")
+                  (0 . "azul")
+                  (3 . "morado")
+                  (1 . "azul")
+                  (6 . "morado")
+                  (3 . "azul")
+                  (4 . "morado"))))
 
 (display "\nRF11: game\n")
 new-game
@@ -207,7 +246,7 @@ updated-player-2
 
 
 ;RF17: game-set-end
-(define ended-game-1 (game-set-end new-game))
+(define ended-game-1 (game-set-end game-2))
 (define ended-game-2 (game-set-end updated-game))
 (define ended-game-3 (game-set-end game-1))
 (display "\nRF17: game-set-end\n")

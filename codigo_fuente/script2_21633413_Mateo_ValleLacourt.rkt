@@ -20,34 +20,33 @@
 ; 4. Creación de un nuevo juego
 (define g0 (game jugador1 jugador2 empty-board 1))
 
-; 5. Realizando movimientos para empate
-(define g1 (game-player-set-move g0 jugador1 0))  ; Mateo coloca en columna 0
-(define g2 (game-player-set-move g1 jugador2 2))  ; Cristobal coloca en columna 1
-(define g3 (game-player-set-move g2 jugador1 3))  ; Mateo coloca en columna 0
-(define g4 (game-player-set-move g3 jugador2 0))  ; Cristobal coloca en columna 1
-(define g5 (game-player-set-move g4 jugador1 4))  ; Mateo coloca en columna 0
-(define g6 (game-player-set-move g5 jugador2 2))  ; Cristobal coloca en columna 0
-(define g7 (game-player-set-move g6 jugador1 5))  ; Mateo coloca en columna 1
-(define g8 (game-player-set-move g7 jugador2 6))  ; Cristobal coloca en columna 3
-(define g9 (game-player-set-move g8 jugador1 6))  ; Mateo coloca en columna 3
-(define g10 (game-player-set-move g9 jugador2 5)) ; Cristobal coloca en columna 0
-(define g11 (game-player-set-move g10 jugador1 1)) ; Mateo coloca en columna 3 
-(define g12 (game-player-set-move g11 jugador2 5))  ; Cristobal coloca en columna 2
-(define g13 (game-player-set-move g12 jugador1 1))  ; Mateo coloca en columna 4
-(define g14 (game-player-set-move g13 jugador2 5))  ; Cristobal coloca en columna 4
-(define g15 (game-player-set-move g14 jugador1 5))  ; Mateo coloca en columna 0
-(define g16 (game-player-set-move g15 jugador2 6))  ; Cristobal coloca en columna 3
-(define g17 (game-player-set-move g16 jugador1 6))  ; Mateo coloca en columna 5
-(define g18 (game-player-set-move g17 jugador2 5))  ; Cristobal coloca en columna 6
-(define g19 (game-player-set-move g18 jugador1 6))  ; Mateo coloca en columna 5
-(define g20 (game-player-set-move g19 jugador2 3))  ; Cristobal coloca en columna 6
-(define g21 (game-player-set-move g20 jugador1 0))  ; Mateo coloca en columna 5
-(define g22 (game-player-set-move g21 jugador2 3))  ; Cristobal coloca en columna 6
-(define g23 (game-player-set-move g22 jugador1 1))  ; Mateo coloca en columna 5
-(define g24 (game-player-set-move g23 jugador2 6))  ; Cristobal coloca en columna 6
-(define g25 (game-player-set-move g24 jugador1 3))  ; Mateo coloca en columna 5
-(define g26 (game-player-set-move g25 jugador2 4))  ; Cristobal coloca en columna 6
-
+; 5. Realizando movimientos para victoria horizontal
+(define g1 (game-player-set-move g0 jugador1 0))  ; Toto coloca en columna 0
+(define g2 (game-player-set-move g1 jugador2 2))  ; PapaFrita coloca en columna 2
+(define g3 (game-player-set-move g2 jugador1 3))  ; Toto coloca en columna 3
+(define g4 (game-player-set-move g3 jugador2 0))  ; PapaFrita coloca en columna 0
+(define g5 (game-player-set-move g4 jugador1 4))  ; Toto coloca en columna 4
+(define g6 (game-player-set-move g5 jugador2 2))  ; PapaFrita coloca en columna 2
+(define g7 (game-player-set-move g6 jugador1 5))  ; Toto coloca en columna 5
+(define g8 (game-player-set-move g7 jugador2 6))  ; PapaFrita coloca en columna 6
+(define g9 (game-player-set-move g8 jugador1 6))  ; Toto coloca en columna 6
+(define g10 (game-player-set-move g9 jugador2 5)) ; PapaFrita coloca en columna 5
+(define g11 (game-player-set-move g10 jugador1 1)) ; Toto coloca en columna 1
+(define g12 (game-player-set-move g11 jugador2 5))  ; PapaFrita coloca en columna 5
+(define g13 (game-player-set-move g12 jugador1 1))  ; Toto coloca en columna 1
+(define g14 (game-player-set-move g13 jugador2 5))  ; PapaFrita coloca en columna 5
+(define g15 (game-player-set-move g14 jugador1 5))  ; Toto coloca en columna 5
+(define g16 (game-player-set-move g15 jugador2 6))  ; PapaFrita coloca en columna 6
+(define g17 (game-player-set-move g16 jugador1 6))  ; Toto coloca en columna 6
+(define g18 (game-player-set-move g17 jugador2 5))  ; PapaFrita coloca en columna 5
+(define g19 (game-player-set-move g18 jugador1 6))  ; Toto coloca en columna 6
+(define g20 (game-player-set-move g19 jugador2 3))  ; PapaFrita coloca en columna 3
+(define g21 (game-player-set-move g20 jugador1 0))  ; Toto coloca en columna 0
+(define g22 (game-player-set-move g21 jugador2 3))  ; PapaFrita coloca en columna 3
+(define g23 (game-player-set-move g22 jugador1 1))  ; Toto coloca en columna 1
+(define g24 (game-player-set-move g23 jugador2 6))  ; PapaFrita coloca en columna 6
+(define g25 (game-player-set-move g24 jugador1 3))  ; Toto coloca en columna 3
+(define g26 (game-player-set-move g25 jugador2 4))  ; PapaFrita coloca en columna 4
 
 
 ; 6. Verificaciones durante el juego

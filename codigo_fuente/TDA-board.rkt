@@ -3,7 +3,7 @@
 (require "TDA-piece.rkt")
 
 (provide board)
-(provide board-2.0)
+(provide board-with-players)
 (provide board-get-tablero)
 (provide board-can-play?)
 (provide board-set-play-piece)
@@ -14,7 +14,14 @@
 
 
 ;;;TDA board: Estructura que representa un tablero 6x7 de conecta 4 en base de una matriz, hecha con una lista de listas. Tambien tiene a jugador 1 y 2 de un juego.
-
+(define tablero-2 '((("( )" "( )" "( )" "( )" "( )" "(M)" "(M)")
+                     ("( )" "( )" "( )" "( )" "( )" "(A)" "(A)")
+                     ("( )" "( )" "( )" "(A)" "( )" "(M)" "(A)")
+                     ("(A)" "(A)" "( )" "(M)" "( )" "(M)" "(M)")
+                     ("(M)" "(A)" "(M)" "(M)" "(M)" "(M)" "(A)")
+                     ("(A)" "(A)" "(M)" "(A)" "(A)" "(A)" "(M)"))
+                    (1 "Toto" ("azul" . "(A)") 0 2 0 8)
+                    (2 "PapaFrita" ("morado" . "(M)") 2 0 0 8)))
 
 
  ;;;;;;;;;;;;;;;;;
@@ -41,7 +48,7 @@
 ; Rec: Representacion de tablero (board)
 ; Tipo recursión: No aplica
 
-(define board-2.0
+(define board-with-players
   (lambda (board p1 p2)
     (list-set (list-set board 1 p1) 2 p2)))
 
@@ -189,62 +196,104 @@
 ; Descripción: funcion que permite verificar si algun jugador ha ganado verticalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
-; Tipo recursión: Natural, es recursion natural ya que se llama a si misma para descomponer el problema en subproblemas mas simples,
-; y la combinacion de estos subproblemas se juntan para obtener la solucion general, ademas las condiciones y el contador, refuerzan la idea de que es una recursion natural.
-; Y la descomposicion del problema se hace de forma lineal. A todo esto agregar que no usa ningun acomulador que entregue el resultado final.
+; Tipo recursión: Natural, ya que no usa contadores y la solucion se va resolviendo a medida que se avanza en el tablero, dejando estados pendientes.
 
 (define board-check-vertical-win
   (lambda (board)
+    (define transponer-tablero   ;rota el tablero en 90 grados
+      (lambda (tablero)
+        (if (null? (car tablero)) 
+            '()
+            (cons (map car tablero) (transponer-tablero (map cdr tablero))))))
+    
+    (define verificar-columna
+      (lambda (lista p1 p2)
+        (cond
+          [(equal? (length lista) 3) 0]   ;si el tamaño es 3, retornar 0, ya que no pueden haber 4 seguidas
+          [(and (equal? (car lista) (cadr lista))  ;sino, si las sig 4 pos son iguales y son piezas de p1, retornar 1.
+                (equal? (cadr lista) (caddr lista))
+                (equal? (caddr lista) (cadddr lista))
+                (equal? (car lista) (piece-get-piece (player-get-piece p1)))) 1]
 
-    (define vertical-win
-          (lambda (board fila columna contador)
-            (cond
-              [(> columna board-get-columnas) 0]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p1 board))))) 1]
-              [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p2 board))))) 2]
-              [(equal? fila board-get-filas)
-               (vertical-win board 0 (add1 columna) 1)]
-              [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) columna))
-               (vertical-win board (add1 fila) columna (add1 contador))]
-              [else (vertical-win board (add1 fila) columna 1)])))
+          [(and (equal? (car lista) (cadr lista)) ;sino, vericiar con la pieza de p2
+                (equal? (cadr lista) (caddr lista))
+                (equal? (caddr lista) (cadddr lista))
+                (equal? (car lista) (piece-get-piece (player-get-piece p2)))) 2]
+          [else (verificar-columna (cdr lista) p1 p2)]))) ;sino son iguales, avanzo en la lista
+   
 
-    (vertical-win board 0 0 1)))
+    (if (equal? (length (transponer-tablero (reverse (board-get-tablero board)))) 1) ;si se llega a la ultima columna, sumar verificar columna y 0, si no
+        (+ (verificar-columna
+            (car (transponer-tablero (reverse (board-get-tablero board))))
+            (board-get-p1 board)
+            (board-get-p2 board)) 0)
+
+        (+ (verificar-columna    ;sino, sumar verificar columna con el llamado recursivo de la siguiente columna
+            (car (transponer-tablero (reverse (board-get-tablero board))))
+            (board-get-p1 board)
+            (board-get-p2 board))
+           (board-check-vertical-win (board-with-players
+                                      (list-set board 0 (reverse
+                                                         (transponer-tablero (cdr (transponer-tablero (reverse
+                                                                                                       (board-get-tablero board)))))))
+                                      (board-get-p1 board)
+                                      (board-get-p2 board)))))))
+
+;ejemplo: (+ ganador-de-columna (+ ganador-de-columna-sig (+ ganador-de-columna-sig 0)))
+;si la suma es 1 es porq encontro victoria de p1
+;si la suma es 2 es porq encontro victoria de p2
+;si la suma es 0 es porq no se encontro ganadores
 
 
 
 ; Descripción: funcion que permite verificar si algun jugador ha ganado horizontalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
-; Tipo recursión: Natural, es recursion natural ya que se llama a si misma para descomponer el problema en subproblemas mas simples,
-; y la combinacion de estos subproblemas se juntan para obtener la solucion general, ademas las condiciones y el contador, refuerzan la idea de que es una recursion natural.
-; Y la descomposicion del problema se hace de forma lineal. A todo esto agregar que no usa ningun acomulador que entregue el resultado final.
-
+; Tipo recursión: Natural, ya que no usa contadores y la solucion se va resolviendo a medida que se avanza en el tablero, dejando estados pendientes.
 
 (define board-check-horizontal-win
   (lambda (board)
 
-    (define horizontal-win
-      (lambda (board fila columna contador)
+    (define verificar-fila
+      (lambda (lista p1 p2)
         (cond
-          [(> fila board-get-filas) 0]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p1 board))))) 1]
-          [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p2 board))))) 2]
-          [(equal? columna board-get-columnas)
-           (horizontal-win board (add1 fila) 0 1)]
-          [(equal? (board-get-elem board fila columna) (board-get-elem board fila (add1 columna)))
-           (horizontal-win board fila (add1 columna) (add1 contador))]
-          [else (horizontal-win board fila (add1 columna) 1)])))
+          [(equal? (length lista) 3) 0]
+          [(and (equal? (car lista) (cadr lista))
+                (equal? (cadr lista) (caddr lista))
+                (equal? (caddr lista) (cadddr lista))
+                (equal? (car lista) (piece-get-piece (player-get-piece p1)))) 1]
 
-    (horizontal-win board 0 0 1)))
+          [(and (equal? (car lista) (cadr lista))
+                (equal? (cadr lista) (caddr lista))
+                (equal? (caddr lista) (cadddr lista))
+                (equal? (car lista) (piece-get-piece (player-get-piece p2)))) 2]
+          [else (verificar-fila (cdr lista) p1 p2)])))
+
+    
+    (if (null? (board-get-tablero board)) 0
+        (+ (verificar-fila
+            (car (board-get-tablero board))
+            (board-get-p1 board)
+            (board-get-p2 board))
+           (board-check-horizontal-win (board-with-players
+                                        (list-set board 0 (cdr (board-get-tablero board)))
+                                        (board-get-p1 board)
+                                        (board-get-p2 board)))))))
+
+;ejemplo: (+ ganador-de-fila (+ ganador-de-fila-sig (+ ganador-de-fila-sig 0)))
+;si la suma es 1 es porq encontro victoria de p1
+;si la suma es 2 es porq encontro victoria de p2
+;si la suma es 0 es porq no se encontro ganadores
 
 
 
 ; Descripción: funcion que permite verificar si algun jugador ha ganado diagonalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
-; Tipo recursión: Natural, es recursion natural ya que se llama a si misma para descomponer el problema en subproblemas mas simples,
-; y la combinacion de estos subproblemas se juntan para obtener la solucion general, ademas las condiciones y el contador, refuerzan la idea de que es una recursion natural.
-; Y la descomposicion del problema se hace de forma lineal. A todo esto agregar que no usa ningun acomulador que entregue el resultado final.
+; Tipo recursión: Cola, "board-check-diagonal-win" es un wrapper para la funcion "check-diagonal-inner", que usa recursion de cola para llegar al resultado,
+; usando las funciones check-down-izq y der, las cuales calculan quien es ganador, dada una pocision, llendose diagonalmente hacia las direcciones dadas.
+; Por lo tanto, al no dejar estado pendientes, ya que la respuesta parcial se la lleva el acomulador, siendo este el que se entrega al finalizar de escanear el tablero,
+; se dice que es de recursividad de tipo cola.
 
 (define board-check-diagonal-win
   (lambda (board)
@@ -252,40 +301,43 @@
     (define check-down-der
       (lambda (board fila columna contador)
         (cond
-          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
+          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) 0]
           [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p1 board))))) 1]
           [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p2 board))))) 2]
-          [(or (> (add1 fila) board-get-filas) (> (add1 columna) board-get-columnas)) #f]
+          [(or (> (add1 fila) board-get-filas) (> (add1 columna) board-get-columnas)) 0]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (add1 columna)))
            (check-down-der board (add1 fila) (add1 columna) (add1 contador))]
-          [else #f])))
+          [else 0])))
 
     (define check-down-izq
       (lambda (board fila columna contador)
         (cond
-          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) #f]
+          [(or (< fila 0) (< columna 0) (> fila board-get-filas) (> columna board-get-columnas)) 0]
           [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p1 board))))) 1]
           [(and (equal? contador 4) (equal? (board-get-elem board fila columna) (piece-get-piece (player-get-piece (board-get-p2 board))))) 2]
-          [(or (> (add1 fila) board-get-filas) (< (sub1 columna) 0)) #f]
+          [(or (> (add1 fila) board-get-filas) (< (sub1 columna) 0)) 0]
           [(equal? (board-get-elem board fila columna) (board-get-elem board (add1 fila) (sub1 columna)))
            (check-down-izq board (add1 fila) (sub1 columna) (add1 contador))]
-          [else #f])))
+          [else 0])))
 
-    
-    (define check-all-diagonal
-      (lambda (board fila columna)
-        (cond
-          [(equal? fila 3) 0]
-          [(> columna board-get-columnas) (check-all-diagonal board (add1 fila) 0)]
-          [(not (equal? (check-down-der board fila columna 1) #f)) (check-down-der board fila columna 1)]
-          [(not (equal? (check-down-izq board fila columna 1) #f)) (check-down-izq board fila columna 1)]
-          [else (check-all-diagonal board fila (add1 columna))])))
+    (define check-diagonal-inner
+      (lambda (board fila columna acomulador)
+       
+          (if (equal? fila 3)
+              acomulador
+              (if (> columna board-get-columnas)
+                  (check-diagonal-inner board (add1 fila) 0 acomulador)
+                  (check-diagonal-inner board fila (add1 columna) (+ acomulador
+                                                                 (check-down-der board fila columna 1)
+                                                                 (check-down-izq board fila columna 1)))))))
 
-    (check-all-diagonal board 0 0)))
+    (check-diagonal-inner board 0 0 0)))
 
 
 
-; Descripción: funcion que verifica el estado del tablero usando las ultimas 3 funciones y entrega el posible ganador.
+; Descripción: funcion que verifica el estado del tablero usando las ultimas 3 funciones y entrega el posible ganador,
+; se usa esta estructura, ya que si simplemente sumamos los resultados de las 3 funciones, pueden haber casos especiales en los cuales,
+; un jugador, al poner una pieza, pueda ganar de mas de una forma.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: No aplica
