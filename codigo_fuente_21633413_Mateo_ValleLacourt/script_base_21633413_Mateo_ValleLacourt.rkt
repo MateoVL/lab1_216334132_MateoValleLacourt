@@ -1,8 +1,8 @@
 #lang racket
-(require "TDA-player.rkt")
-(require "TDA-piece.rkt")
-(require "TDA-board.rkt")
-(require "TDA-game.rkt")
+(require "TDA-player_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-board_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-game_21633413_Mateo_ValleLacourt.rkt")
 
 ; Script de prueba para Conecta4
 
@@ -61,16 +61,14 @@
 (game-is-draw? g11)
 
 ; 9. Finalizar el juego y actualizar estadísticas
-(define ended-game (game-set-end g11))
+(define ended-game (game-set-end g11))   ;como game-player-set-move ya actualiza las estadisticas, osea, usa ended-game,
+                                         ;al aplicarla aqui sobre el ultimo estado de juego, se actualizan denuevo,
+                                         ;error de script hecho por coordinacion.
 
-; 10. Actualizar estadísticas de los jugadores
-(define updated-p1 (player-update-stats p1 "win"))
-(define updated-p2 (player-update-stats p2 "loss"))
-
-; 11. Mostrar historial de movimientos
+; 10. Mostrar historial de movimientos
 (display "Historial de movimientos:\n")
 (game-history ended-game)
 
-; 12. Mostrar estado final del tablero
+; 11. Mostrar estado final del tablero
 (display "Estado final del tablero:\n")
 (game-get-board ended-game)

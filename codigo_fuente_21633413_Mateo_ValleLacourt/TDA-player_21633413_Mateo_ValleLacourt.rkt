@@ -1,15 +1,21 @@
 #lang racket
+(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
+
 (provide player)
 (provide player-update-stats)
 (provide player-get-remaining-pieces)
 (provide player-get-piece)
 (provide player-set-sub1-fichas)
 (provide player-get-id)
+(provide player-set-add1-wins)
+(provide player-set-add1-losses)
+(provide player-set-add1-draws)
+(provide player-set-sub1-fichas)
 
-(require "TDA-piece.rkt")
 
 
-;;;TDA player: La estructura de player se conforma por una lista con los elementos que identifican a un jugador, como su id, nombre, la ficha con la que juega, victorias, derrotas, empates y piezas restantes. Implementado con listas.
+;;;TDA player: La estructura de player se conforma por una lista con los elementos que identifican a un jugador, como su id, nombre, la ficha con la que juega, victorias, derrotas, empates y piezas restantes.
+;Implementado con listas.
 
 
 
@@ -18,13 +24,15 @@
  ;;;;;;;;;;;;;;;;;
 
 
+; RF02 - TDA Player - constructor
 ; Descripción: funcion que permite crear un jugador.
 ; Dom: id (int) X name (string) X color (string) X wins (int) X losses (int) X draws (int) X remaining-pieces (int)
 ; Rec: jugador (player)
 ; Tipo recursión: No aplica
 
 (define player
-  (lambda (id name color wins losses draws remaining-pieces) (list id name (piece color) wins losses draws remaining-pieces)))
+  (lambda (id name color wins losses draws remaining-pieces)
+    (list id name (piece color) wins losses draws remaining-pieces)))
 
 
 
@@ -62,17 +70,6 @@
 
 
 
-; Descripción: funcion que entrega la cantidad de piezas disponibles de un jugador.
-; Dom: player (player)
-; Rec: cantidad de piezas (int)
-; Tipo recursión: No aplica
-
-(define player-get-remaining-pieces
-  (lambda (player)
-    (last player)))
-
-
-
 ; Descripción: funcion que entrega las victorias de un jugador.
 ; Dom: player (player)
 ; Rec: cantidad de victorias (int)
@@ -103,6 +100,17 @@
 (define player-get-draws
   (lambda (player)
     (list-ref player 5)))
+
+
+
+; Descripción: funcion que entrega la cantidad de piezas disponibles de un jugador.
+; Dom: player (player)
+; Rec: cantidad de piezas (int)
+; Tipo recursión: No aplica
+
+(define player-get-remaining-pieces
+  (lambda (player)
+    (last player)))
 
 
 
@@ -162,7 +170,8 @@
  ;;;;;;;;;
 
 
-; Descripción: funcion que actualiza las estadisticas del jugador despues de un juego (victoria, derrota o empate) y retorna booleano dependiendo si es empate o no.
+; RF14 - TDA Player - otros - actualizarEstadisticas
+; Descripción: funcion que actualiza las estadisticas del jugador despues de un juego (victoria, derrota o empate).
 ; Dom: player (player) X result (string: "win" | "loss" | "draw")
 ; Rec: player actualizado (player)
 ; Tipo recursión: No aplica

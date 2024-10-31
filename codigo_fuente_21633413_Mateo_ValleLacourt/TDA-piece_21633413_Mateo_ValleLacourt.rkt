@@ -13,6 +13,7 @@
  ;;;;;;;;;;;;;;;;;
 
 
+; RF03 - TDA Piece - constructor
 ; Descripción: funcion que crea una ficha de conecta 4.
 ; Dom: color (string)
 ; Rec: pieza (piece)

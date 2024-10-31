@@ -1,2 +1,4 @@
-para correr los scripts, se deben abrir los archivos y clickear run, luego se pueden checkear cada funcion,
-lo mismo con el archivo de pruebas
+Para que cualquer codigo funcione, todos los archivos deben estar en la misma direccion.
+Para correr los scripts, se deben abrir los archivos script y clickear run.
+Se puede checkear cada funcion RF en el main (los RF estan en el main y en los TDA).
+Para correr el archivo de pruebas, se debe abrir el archivo y clickear run.

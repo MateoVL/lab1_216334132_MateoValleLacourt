@@ -1,3 +1,15 @@
+RNF1. Autoevaluación: 1
+RNF2. Lenguaje: 1
+RNF3. Versión: 1
+RNF4. Standard: 1
+RNF5. No variables: 1
+RNF6. Documentación: 1
+RNF7. Dom->Rec: 1
+RNF8. Organización: 1
+RNF9. Historial: 1
+RNF10. Script de pruebas: 1
+RNF11. Prerrequisitos: 1
+
 RF01 - TDAs: 1
 RF02 - TDA Player - constructor: 1
 RF03 - TDA Piece - constructor: 1

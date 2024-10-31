@@ -1,12 +1,19 @@
 #lang racket
-(require "TDA-player.rkt")
-(require "TDA-piece.rkt")
+(require "TDA-player_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
 
 (provide board)
 (provide board-with-players)
 (provide board-get-tablero)
-(provide board-can-play?)
+(provide board-get-fila-baja)
+(provide board-get-p1)
+(provide board-get-p2)
+(provide board-get-filas)
+(provide board-get-columnas)
+(provide board-get-elem)
+(provide board-set-elem)
 (provide board-set-play-piece)
+(provide board-can-play?)
 (provide board-check-vertical-win)
 (provide board-check-horizontal-win)
 (provide board-check-diagonal-win)
@@ -14,14 +21,7 @@
 
 
 ;;;TDA board: Estructura que representa un tablero 6x7 de conecta 4 en base de una matriz, hecha con una lista de listas. Tambien tiene a jugador 1 y 2 de un juego.
-(define tablero-2 '((("( )" "( )" "( )" "( )" "( )" "(M)" "(M)")
-                     ("( )" "( )" "( )" "( )" "( )" "(A)" "(A)")
-                     ("( )" "( )" "( )" "(A)" "( )" "(M)" "(A)")
-                     ("(A)" "(A)" "( )" "(M)" "( )" "(M)" "(M)")
-                     ("(M)" "(A)" "(M)" "(M)" "(M)" "(M)" "(A)")
-                     ("(A)" "(A)" "(M)" "(A)" "(A)" "(A)" "(M)"))
-                    (1 "Toto" ("azul" . "(A)") 0 2 0 8)
-                    (2 "PapaFrita" ("morado" . "(M)") 2 0 0 8)))
+
 
 
  ;;;;;;;;;;;;;;;;;
@@ -29,6 +29,7 @@
  ;;;;;;;;;;;;;;;;;
 
 
+; RF04 - TDA Board - constructor
 ; Descripción: funcion que crea un tablero de conecta 4.
 ; Dom: sin parametros de entrada
 ; Rec: tablero vacio (board)
@@ -163,6 +164,7 @@
 
 
 
+; RF06 - TDA Board - modificador - jugar ficha
 ; Descripción: funcion que permite realizar una jugada en el tablero.
 ; Dom: board (board) X column (int) X piece (piece)
 ; Rec: tablero actualizado (board)
@@ -170,8 +172,8 @@
 
 (define board-set-play-piece
   (lambda (board column piece)
-    (if (equal? (board-get-fila-baja board column) -1)
-        -1
+    (if (or (equal? (board-get-fila-baja board column) -1) (equal? (board-can-play? board) #f))
+        #f
         (board-set-elem board (board-get-fila-baja board column) column (piece-get-piece piece)))))
 
 
@@ -182,6 +184,7 @@
  ;;;;;;;;;
 
 
+; RF05 - TDA Board - otros - sePuedeJugar?
 ; Descripción: funcion que permite verificar si se pueden hacer mas jugadas en el tablero, true: si se puede, false: no se puede.
 ; Dom: board (board)
 ; Rec: se puede jugar? (boolean)
@@ -189,10 +192,13 @@
 
 (define board-can-play?
   (lambda (board)
-    (list? (member "( )" (first (board-get-tablero board))))))
+    (if (equal? (board-who-is-winner board) 0)
+        (list? (member "( )" (first (board-get-tablero board))))
+        #f)))
 
 
 
+; RF07 - TDA Board - otros - verificar victoria vertical
 ; Descripción: funcion que permite verificar si algun jugador ha ganado verticalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
@@ -246,6 +252,7 @@
 
 
 
+; RF08 - TDA Board - otros - verificar victoria horizontal
 ; Descripción: funcion que permite verificar si algun jugador ha ganado horizontalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
@@ -287,6 +294,7 @@
 
 
 
+; RF09 - TDA Board - otros - verificar victoria diagonal
 ; Descripción: funcion que permite verificar si algun jugador ha ganado diagonalmente. 1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
@@ -335,9 +343,10 @@
 
 
 
+; RF10 - TDA Board - otros - entregarGanador
 ; Descripción: funcion que verifica el estado del tablero usando las ultimas 3 funciones y entrega el posible ganador,
 ; se usa esta estructura, ya que si simplemente sumamos los resultados de las 3 funciones, pueden haber casos especiales en los cuales,
-; un jugador, al poner una pieza, pueda ganar de mas de una forma.
+; un jugador, al poner una pieza, pueda ganar en mas de una forma.
 ; Dom: board (board)
 ; Rec: 1 (int) | 2 (int) | 0 (int)
 ; Tipo recursión: No aplica
@@ -345,6 +354,7 @@
 (define board-who-is-winner
   (lambda (board)
     (cond
+      [(or (equal? (board-get-p1 board) '()) (equal? (board-get-p2 board) '())) 0]
       [(not (equal? (board-check-vertical-win board) 0)) (board-check-vertical-win board)]
       [(not (equal? (board-check-horizontal-win board) 0)) (board-check-horizontal-win board)]
       [(not (equal? (board-check-diagonal-win board) 0)) (board-check-diagonal-win board)]

@@ -1,8 +1,8 @@
 #lang racket
-(require "TDA-player.rkt")
-(require "TDA-piece.rkt")
-(require "TDA-board.rkt")
-(require "TDA-game.rkt")
+(require "TDA-player_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-board_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-game_21633413_Mateo_ValleLacourt.rkt")
 
 ; Script 2
 
