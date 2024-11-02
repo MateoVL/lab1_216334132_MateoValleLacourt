@@ -1,8 +1,12 @@
+-Debido a inconsistencia y contradicciones de instrucciones en el enunciado, en la parte que 
+dice que las pruebas deben tener 3 ejemplos de cada RF y luego dice que deben haber 2 scripts y 
+luego se comenta que dentro de estos scripts deben estar los 3 ejemplos de cada RF. Se hizo exactamente eso,
+en los archivos scripts se encuentran ejemplos de juego y ademas 3 ejemplos de cada RF al final de este.
+
 -Para que cualquer codigo funcione, se debe exportar/extraer el zip,
 y todos los archivos deben estar en la misma direccion/carpeta.
 
--Para correr los scripts, se deben abrir los archivos script y clickear run.
+-Para correr los scripts/ejemplos de funcion, se deben abrir los archivos script y clickear run.
 
 -Se puede checkear cada funcion RF en el main (los RF estan en el main y en los TDA).
 
--Para correr el archivo de pruebas(3 ejemplos de cada RF), se debe abrir el archivo y clickear run.

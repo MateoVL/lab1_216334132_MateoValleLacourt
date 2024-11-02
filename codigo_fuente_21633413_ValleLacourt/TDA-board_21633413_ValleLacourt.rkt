@@ -1,6 +1,6 @@
 #lang racket
-(require "TDA-player_21633413_Mateo_ValleLacourt.rkt")
-(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-player_21633413_ValleLacourt.rkt")
+(require "TDA-piece_21633413_ValleLacourt.rkt")
 
 (provide board)
 (provide board-with-players)

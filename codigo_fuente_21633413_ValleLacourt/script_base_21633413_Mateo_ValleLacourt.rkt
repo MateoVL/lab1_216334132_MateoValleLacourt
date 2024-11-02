@@ -1,8 +1,8 @@
 #lang racket
-(require "TDA-player_21633413_Mateo_ValleLacourt.rkt")
-(require "TDA-piece_21633413_Mateo_ValleLacourt.rkt")
-(require "TDA-board_21633413_Mateo_ValleLacourt.rkt")
-(require "TDA-game_21633413_Mateo_ValleLacourt.rkt")
+(require "TDA-player_21633413_ValleLacourt.rkt")
+(require "TDA-piece_21633413_ValleLacourt.rkt")
+(require "TDA-board_21633413_ValleLacourt.rkt")
+(require "TDA-game_21633413_ValleLacourt.rkt")
 
 ; Script de prueba para Conecta4
 
